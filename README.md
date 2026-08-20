@@ -115,8 +115,8 @@ For technical details, see the following pages:
     * "storage"
 
 ## License
+
 MIT License.
-Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Chrome)
 
 ## KNOWN LIMITATIONS
 
@@ -126,6 +126,7 @@ Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Chrom
 ## Credits
 
 ### Icon
+
 I synthesized two icons (a pencil and a link) to produce ```icon.png```.
 
 * A pencil icon from [Onebit free icon set](http://www.icojoy.com/articles/44/) © 2010 [Khodjaev Stanislav](http://www.icojoy.com/), used under a License: These icons are free to use in any kind of commercial or non-commercial project unlimited times.
@@ -134,5 +135,10 @@ I synthesized two icons (a pencil and a link) to produce ```icon.png```.
 ### Extension
 This extension "Format Link" are inspired by extensions below:
 
-* [Chrome Web Store - Create Link](https://chrome.google.com/webstore/detail/gcmghdmnkfdbncmnmlkkglmnnhagajbm) by [ku (KUMAGAI Kentaro)](https://github.com/ku)
-* [Make Link :: Add-ons for Firefox](https://addons.mozilla.org/en-US/firefox/addon/make-link/) by [Rory Parle](https://addons.mozilla.org/en-US/firefox/user/90/)
+## テストの実行
+
+Node.js 18 以降を用意して、次のコマンドを実行してください。
+
+```sh
+npm test
+```
