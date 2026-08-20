@@ -5,6 +5,25 @@ const getOptions = async () => {
   return response.options;
 }
 
+const getActiveFrameId = async tabId => {
+  const response = await chrome.runtime.sendMessage({
+    message: 'getActiveFrameId',
+    tabId,
+  });
+  return response?.frameId ?? 0;
+};
+
+const sendMessageToFrame = async (tabId, message, frameId) => {
+  try {
+    return await chrome.tabs.sendMessage(tabId, message, { frameId });
+  } catch (error) {
+    if (frameId !== 0) {
+      return chrome.tabs.sendMessage(tabId, message, { frameId: 0 });
+    }
+    throw error;
+  }
+};
+
 const populateText = formattedText => {
   const textElem = document.getElementById('textToCopy');
   textElem.value = formattedText;
@@ -18,12 +37,15 @@ const copyLink = async formatID => {
   const asHTML = options['html' + formatID];
 
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const response = await chrome.tabs.sendMessage(tabs[0].id, {
+  const frameId = await getActiveFrameId(tabs[0].id);
+  const response = await sendMessageToFrame(tabs[0].id, {
     message: "copyLink",
     format,
     asHTML,
     platformOs: chrome.runtime.PlatformOs,
-  })
+    pageUrl: tabs[0].url,
+    pageTitle: tabs[0].title,
+  }, frameId)
   .catch(error => {
     console.error('Error copying link:', error);
     populateText("Failed to get link");
@@ -38,12 +60,13 @@ const copyModifiedText = async (modifiedText, formatID) => {
   const asHTML = options['html' + formatID];
 
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const response = await chrome.tabs.sendMessage(tabs[0].id, {
+  const frameId = await getActiveFrameId(tabs[0].id);
+  const response = await sendMessageToFrame(tabs[0].id, {
     message: "copyModifiedText",
     modifiedText,
     asHTML,
     platformOs: chrome.runtime.PlatformOs,
-  })
+  }, frameId)
   .catch(error => {
     console.error('Error copying modified text:', error);
   });

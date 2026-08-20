@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Format Link Custom - Chrome manual test</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { max-width: 960px; margin: 0 auto; padding: 24px; line-height: 1.6; }
+    section { border: 1px solid #888; border-radius: 8px; margin: 16px 0; padding: 16px; }
+    iframe { background: white; border: 1px solid #888; min-height: 180px; width: 100%; }
+    code { background: #8883; border-radius: 4px; padding: 2px 4px; }
+    .selectable { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <h1>Format Link Custom 手動テスト</h1>
+  <p>
+    下の文章を選択して、拡張機能のポップアップ、ショートカット、または
+    コンテキストメニューからリンクをコピーしてください。
+  </p>
+
+  <section>
+    <h2>1. iframeなし</h2>
+    <p class="selectable">
+      iframeを使わない親ページの選択テキストです。
+      <a href="https://example.com/without-iframe">親ページのリンク</a>
+    </p>
+    <p>期待値: 選択文字列がリンクテキストになり、URLは親ページのURLになります。</p>
+  </section>
+
+  <section>
+    <h2>2. 同一オリジン iframe</h2>
+    <p>親ページと同じポートのiframeです。</p>
+    <iframe src="/frame.html?mode=same-origin" title="同一オリジン iframe"></iframe>
+    <p>期待値: iframe内の選択文字列がリンクテキストになります。</p>
+  </section>
+
+  <section>
+    <h2>3. クロスオリジン iframe</h2>
+    <p>ポートが異なるため、親ページとは別オリジンのiframeです。</p>
+    <iframe src="__FRAME_ORIGIN__/frame.html?mode=cross-origin" title="クロスオリジン iframe"></iframe>
+    <p>期待値: クロスオリジンでもiframe内の選択文字列がリンクテキストになります。</p>
+  </section>
+
+  <section>
+    <h2>確認手順</h2>
+    <ol>
+      <li>各領域の文章を一部選択します。</li>
+      <li>ツールバーボタンを押し、ポップアップに選択文字列が表示されることを確認します。</li>
+      <li>同じ選択状態でショートカットを実行して確認します。</li>
+      <li>リンク上で右クリックし、コンテキストメニューからコピーして確認します。</li>
+      <li>リンクを選択した場合は、選択範囲内のリンクURLが使われることを確認します。</li>
+    </ol>
+    <p>
+      iframe内のテキストがページタイトルに置き換わる場合は、拡張機能を再読み込みしてから
+      ページも再読み込みしてください。
+    </p>
+  </section>
+</body>
+</html>

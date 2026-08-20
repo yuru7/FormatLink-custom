@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Format Link Custom - iframe manual test</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 16px; line-height: 1.6; }
+    .selectable { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <h2 id="frameHeading">iframeのテスト</h2>
+  <p class="selectable">
+    iframe内の選択テキストです。
+    <a href="https://example.com/inside-iframe">iframe内のリンク</a>
+  </p>
+  <p>このページ自身のURLではなく、親タブのURLが使われることも確認してください。</p>
+  <script>
+    const mode = new URLSearchParams(location.search).get('mode');
+    if (mode) {
+      document.getElementById('frameHeading').textContent =
+        `${mode} iframeのテスト`;
+    }
+  </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "name": "Format Link",
+  "name": "Format Link Custom",
   "version": "5.0.3",
   "manifest_version": 3,
   "description": "Format a link and copy it to the clipboard.",
@@ -18,7 +18,9 @@
       ],
       "js": [
         "content.js"
-      ]
+      ],
+      "all_frames": true,
+      "match_about_blank": true
     }
   ],
   "action": {

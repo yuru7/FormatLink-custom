@@ -1,14 +1,32 @@
 'use strict';
 
 var linkText;
+const setActiveFrame = () => {
+  chrome.runtime.sendMessage({ message: 'setActiveFrame' }).catch(() => {});
+};
+
+document.addEventListener('pointerdown', setActiveFrame);
+document.addEventListener('selectionchange', () => {
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0 && selection.toString().trim()) {
+    setActiveFrame();
+  }
+});
 document.addEventListener('mouseover', function(event) {
   const anchorElement = event.target.closest('a');
   if (anchorElement) {
+    setActiveFrame();
     linkText = anchorElement.text.trim();
   }
 });
 
-const formatLinkAsText = (format, platformOs, linkUrl) => {
+const formatLinkAsText = (
+  format,
+  platformOs,
+  linkUrl,
+  pageUrlOverride,
+  titleOverride
+) => {
   const getFirstLinkInSelection = selection => {
     const getNextNode = (node, endNode) => {
       if (node.firstChild) {
@@ -137,7 +155,7 @@ const formatLinkAsText = (format, platformOs, linkUrl) => {
     return text;
   }
 
-  const title = document.title;
+  const title = titleOverride ?? document.title;
   let text;
   let href = linkUrl;
   if (linkUrl) {
@@ -159,7 +177,7 @@ const formatLinkAsText = (format, platformOs, linkUrl) => {
   if (!text) {
     text = title;
   }
-  const pageUrl = window.location.href;
+  const pageUrl = pageUrlOverride ?? window.location.href;
   if (!href) {
     href = pageUrl;
   }
@@ -190,7 +208,13 @@ const copyToTheClipboard = (textToCopy, asHTML) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.message === "copyLink") {
-    const textToCopy = formatLinkAsText(request.format, request.platformOs, request.linkUrl);
+    const textToCopy = formatLinkAsText(
+      request.format,
+      request.platformOs,
+      request.linkUrl,
+      request.pageUrl,
+      request.pageTitle
+    );
     copyToTheClipboard(textToCopy, request.asHTML).then(() => {
       sendResponse({ result: textToCopy });
     });

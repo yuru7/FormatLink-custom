@@ -24,6 +24,7 @@ const loadContentScript = ({
 } = {}) => {
   const listeners = new Map();
   const clipboard = {};
+  const sentMessages = [];
 
   const document = {
     title,
@@ -67,6 +68,10 @@ const loadContentScript = ({
     },
     chrome: {
       runtime: {
+        sendMessage(message) {
+          sentMessages.push(message);
+          return Promise.resolve();
+        },
         onMessage: {
           addListener() {},
         },
@@ -92,6 +97,8 @@ const loadContentScript = ({
   return {
     ...context.__testExports,
     clipboard,
+    listeners,
+    sentMessages,
   };
 };
 
@@ -185,6 +192,41 @@ test('選択文字列と選択範囲内の最初のリンクURLを使う', () =>
     formatLinkAsText('{{text}} -> {{url}}', 'linux'),
     'Selected text -> https://link.test/first'
   );
+});
+
+test('iframe内の選択文字列を使い、ページURLとタイトルは外側のタブを使う', () => {
+  const selection = {
+    rangeCount: 1,
+    toString: () => 'iframe selection',
+    getRangeAt: () => ({
+      startContainer: {
+        firstChild: null,
+        nextSibling: null,
+        parentNode: null,
+      },
+      endContainer: {},
+    }),
+  };
+  const loaded = loadContentScript({
+    title: 'iframe document',
+    url: 'https://frame.test/document',
+    selection,
+  });
+
+  loaded.listeners.get('selectionchange')();
+
+  assert.equal(
+    loaded.formatLinkAsText(
+      '{{text}} -> {{url}} -> {{title}}',
+      'linux',
+      undefined,
+      'https://outer.test/page',
+      'Outer page'
+    ),
+    'iframe selection -> https://outer.test/page -> Outer page'
+  );
+  assert.equal(loaded.sentMessages.length, 1);
+  assert.equal(loaded.sentMessages[0].message, 'setActiveFrame');
 });
 
 test('不正なテンプレートはパースエラーになる', () => {

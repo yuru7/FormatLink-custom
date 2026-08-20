@@ -1,10 +1,11 @@
 {
-  "name": "format-link",
+  "name": "format-link-custom",
   "private": true,
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "manual-test": "node manual-test/server.js"
   }
 }
