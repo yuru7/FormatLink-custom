@@ -21,6 +21,7 @@ const loadContentScript = ({
   url = 'https://example.test/page',
   selection = emptySelection,
   hoveredText,
+  iframes = [],
 } = {}) => {
   const listeners = new Map();
   const clipboard = {};
@@ -28,6 +29,9 @@ const loadContentScript = ({
 
   const document = {
     title,
+    querySelectorAll() {
+      return iframes;
+    },
     addEventListener(type, listener) {
       listeners.set(type, listener);
     },
@@ -162,6 +166,33 @@ test('コンテキストメニューのリンクとmouseoverのリンク文字�
   assert.equal(
     formatLinkAsText('{{text}} -> {{url}}', 'linux', 'https://link.test/'),
     'Link label -> https://link.test/'
+  );
+});
+
+test('トップフレームのSelectionが空でも同一オリジンiframeの選択を使う', () => {
+  const selection = {
+    rangeCount: 1,
+    toString: () => 'iframe description',
+    getRangeAt: () => ({
+      startContainer: {
+        firstChild: null,
+        nextSibling: null,
+        parentNode: null,
+      },
+      endContainer: {},
+    }),
+  };
+  const childDocument = {
+    getSelection: () => selection,
+    querySelectorAll: () => [],
+  };
+  const { formatLinkAsText } = loadContentScript({
+    iframes: [{ contentDocument: childDocument }],
+  });
+
+  assert.equal(
+    formatLinkAsText('{{text}}', 'linux'),
+    'iframe description'
   );
 });
 

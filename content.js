@@ -20,6 +20,31 @@ document.addEventListener('mouseover', function(event) {
   }
 });
 
+const findSelection = targetDocument => {
+  const selection = targetDocument.getSelection?.() ??
+    (targetDocument === document
+      ? window.getSelection()
+      : targetDocument.defaultView?.getSelection?.());
+
+  if (selection?.rangeCount > 0 && selection.toString().trim()) {
+    return selection;
+  }
+
+  for (const frame of targetDocument.querySelectorAll?.('iframe, frame') ?? []) {
+    try {
+      const childSelection = frame.contentDocument &&
+        findSelection(frame.contentDocument);
+      if (childSelection) {
+        return childSelection;
+      }
+    } catch {
+      // クロスオリジンiframeは無視する。
+    }
+  }
+
+  return null;
+};
+
 const formatLinkAsText = (
   format,
   platformOs,
@@ -161,9 +186,9 @@ const formatLinkAsText = (
   if (linkUrl) {
     text = linkText;
   }
-  const selection = window.getSelection();
+  const selection = findSelection(document);
   console.log(`linkUrl=${linkUrl}, text=${text}, selection?.rangeCount=${selection?.rangeCount}`);
-  if (selection.rangeCount > 0) {
+  if (selection?.rangeCount > 0) {
     const selectionText = selection.toString().trim();
     if (!text && selectionText) {
       text = selectionText;
