@@ -77,6 +77,8 @@ const copyModifiedText = async (modifiedText, formatID) => {
   return false;
 };
 
+let defaultFormatID;
+
 const populateFormatGroup = options => {
   const defaultFormat = options.defaultFormat;
   const cnt = options.count;
@@ -96,6 +98,7 @@ const populateFormatGroup = options => {
       btn.setAttribute('checked', 'checked');
     }
     btn.addEventListener('click', async e => {
+      updateDefaultFormatButton();
       await copyLink(e.target.value);
     });
 
@@ -123,10 +126,21 @@ const getSelectedFormatID = () => {
   return undefined;
 }
 
+const updateDefaultFormatButton = () => {
+  const button = document.getElementById('saveDefaultFormatButton');
+  const isDefault = String(getSelectedFormatID()) === String(defaultFormatID);
+  button.textContent = isDefault
+    ? 'Already the default'
+    : 'Set as default';
+  button.disabled = isDefault;
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
   const options = await getOptions();
   if (options) {
+    defaultFormatID = options.defaultFormat;
     populateFormatGroup(options);
+    updateDefaultFormatButton();
     await copyLink(options.defaultFormat);
   }
 
@@ -137,6 +151,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         message: 'updateDefaultFormat',
         formatID
       });
+      defaultFormatID = formatID;
+      updateDefaultFormatButton();
     }
   });
 
