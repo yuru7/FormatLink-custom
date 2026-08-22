@@ -156,7 +156,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  document.getElementById('copyButton').addEventListener('click', async () => {
+  const copyButton = document.getElementById('copyButton');
+  const copy = async () => {
     const formatID = getSelectedFormatID();
     if (formatID) {
       const result = await copyModifiedText(document.getElementById('textToCopy').value, formatID);
@@ -168,7 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000);
       }
     }
-  });
+  };
+  copyButton.addEventListener('click', copy);
 
   const textarea = document.getElementById('textToCopy');
   if (textarea) {
@@ -177,6 +179,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       textarea.style.height = textarea.scrollHeight + 'px';
     };
     textarea.addEventListener('input', resize);
+    textarea.addEventListener('keydown', event => {
+      if (event.isComposing || !event.ctrlKey || event.key !== 'Enter') {
+        return;
+      }
+      event.preventDefault();
+      copy();
+    });
     resize();
   }
 });
