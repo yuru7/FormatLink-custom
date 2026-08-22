@@ -23,6 +23,7 @@ You can change shortcuts at chrome://extensions/shortcuts
 ### context menu
 Open the context menu and select the "Format Link as XXX" menu item.
 "XXX" in the menu item label changes as you change the default format by clicking the "Set as default" button in the popup page for the toolbar button.
+You can also change the default format on the [options page](#flexible-settings) by selecting the "Default" radio button.
 
 If you check the "Create submenus" in the options page and save the options,
 submenus for each format are created under the "Format Link" context menu group.
@@ -33,7 +34,7 @@ the popup page becomes open, and the formatted text is shown in the text area.
 
 If you want to copy the link in different format, you can press one of the radio buttons.
 
-Also if you want to change the default format, you can press the "Set as default" button.
+Also if you want to change the default format, you can press the "Set as default" button in the popup, or select the "Default" radio button on the options page and save the changes.
 
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.

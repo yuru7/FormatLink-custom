@@ -43,6 +43,7 @@ const createOptionsPage = () => {
     elements.set('format' + i, createElement('format' + i));
     elements.set('selectionNewlines' + i, createElement('selectionNewlines' + i));
     elements.set('html' + i, createElement('html' + i));
+    elements.set('defaultFormat' + i, createElement('defaultFormat' + i, { value: String(i) }));
     for (const direction of ['up', 'down']) {
       buttons.push(createElement('move' + i + direction, {
         dataset: { index: String(i), direction },
@@ -149,6 +150,12 @@ test('項目の上下移動で入力値と既定形式が追従する', async ()
   assert.equal(getButton(page, 4, 'down').disabled, true);
   assert.equal(page.elements.get('selectionNewlines4').value, 'spaces');
 
+  assert.equal(page.elements.get('defaultFormat1').checked, false);
+  assert.equal(page.elements.get('defaultFormat2').checked, true);
+  assert.equal(page.elements.get('defaultFormat3').checked, false);
+  assert.equal(page.elements.get('defaultFormat4').disabled, true);
+  assert.equal(page.elements.get('defaultFormat9').disabled, true);
+
   const initialValues = getItemValues(page);
   page.exports.moveOption(1, 'up');
   page.exports.moveOption(3, 'down');
@@ -162,6 +169,8 @@ test('項目の上下移動で入力値と既定形式が追従する', async ()
   assert.equal(page.elements.get('title2').value, 'One');
   assert.equal(page.elements.get('format2').value, 'format one');
   assert.equal(page.elements.get('html2').checked, false);
+  assert.equal(page.elements.get('defaultFormat1').checked, true);
+  assert.equal(page.elements.get('defaultFormat2').checked, false);
 
   await page.elements.get('saveButton').click();
   assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
@@ -174,6 +183,8 @@ test('項目の上下移動で入力値と既定形式が追従する', async ()
 
   await getButton(page, 1, 'down').click();
   assert.deepEqual(getItemValues(page), initialValues);
+  assert.equal(page.elements.get('defaultFormat1').checked, false);
+  assert.equal(page.elements.get('defaultFormat2').checked, true);
   await page.elements.get('saveButton').click();
   assert.equal(page.savedOptions.at(-1).defaultFormat, 2);
 });
@@ -188,10 +199,44 @@ test('入力済み項目数に応じて空欄行の移動ボタンを無効化�
   assert.equal(getButton(page, 2, 'down').disabled, true);
   assert.equal(getButton(page, 3, 'up').disabled, true);
   assert.equal(getButton(page, 3, 'down').disabled, true);
+  assert.equal(page.elements.get('defaultFormat3').disabled, true);
+  assert.equal(page.elements.get('defaultFormat4').disabled, true);
 
   page.elements.get('title3').value = 'Three';
   await page.elements.get('title3').dispatchEvent('input');
   assert.equal(page.exports.getFormItemCount(), 3);
   assert.equal(getButton(page, 2, 'down').disabled, false);
   assert.equal(getButton(page, 3, 'up').disabled, false);
+  assert.equal(page.elements.get('defaultFormat3').disabled, false);
+});
+
+test('デフォルト項目のラジオで既定形式を選択して保存する', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const radio = page.elements.get('defaultFormat1');
+  radio.checked = true;
+  await radio.dispatchEvent('change');
+
+  assert.equal(page.elements.get('defaultFormat1').checked, true);
+  assert.equal(page.elements.get('defaultFormat2').checked, false);
+
+  await page.elements.get('saveButton').click();
+  assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
+});
+
+test('既定形式の行が空欄になったら保存時に最初の入力済み行へ正規化する', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  page.elements.get('title2').value = '';
+  page.elements.get('format2').value = '';
+  await page.elements.get('title2').dispatchEvent('input');
+
+  // 編集中は選択を維持し（無効化のみ）、保存時に正規化する
+  assert.equal(page.elements.get('defaultFormat2').checked, true);
+  assert.equal(page.elements.get('defaultFormat2').disabled, true);
+
+  await page.elements.get('saveButton').click();
+  assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
 });

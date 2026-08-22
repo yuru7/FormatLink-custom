@@ -32,6 +32,15 @@ const updateMoveButtons = () => {
   });
 };
 
+const updateDefaultFormatControls = () => {
+  const itemCount = getFormItemCount();
+  for (let i = 1; i <= maxCount; ++i) {
+    const radio = document.getElementById('defaultFormat' + i);
+    radio.checked = defaultFormatID === i;
+    radio.disabled = i > itemCount;
+  }
+};
+
 const moveOption = (index, direction) => {
   const offset = direction === 'up' ? -1 : 1;
   const targetIndex = index + offset;
@@ -56,6 +65,7 @@ const moveOption = (index, direction) => {
     defaultFormatID = index;
   }
   updateMoveButtons();
+  updateDefaultFormatControls();
 };
 
 const restoreForm = options => {
@@ -70,6 +80,7 @@ const restoreForm = options => {
   }
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
   updateMoveButtons();
+  updateDefaultFormatControls();
 };
 
 const restoreOptions = async () => {
@@ -81,6 +92,10 @@ const saveOptions = async defaultFormatIDToSave => {
   try {
     if (defaultFormatIDToSave !== undefined) {
       defaultFormatID = defaultFormatIDToSave;
+    }
+    const itemCount = getFormItemCount();
+    if (defaultFormatID > itemCount) {
+      defaultFormatID = itemCount || 1;
     }
     options.defaultFormat = defaultFormatID;
     for (let i = 1; i <= options.maxCount; ++i) {
@@ -129,7 +144,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
   for (let i = 1; i <= maxCount; ++i) {
-    document.getElementById('title' + i).addEventListener('input', updateMoveButtons);
-    document.getElementById('format' + i).addEventListener('input', updateMoveButtons);
+    document.getElementById('defaultFormat' + i).addEventListener('change', event => {
+      defaultFormatID = Number(event.target.value);
+      updateDefaultFormatControls();
+    });
+    document.getElementById('title' + i).addEventListener('input', () => {
+      updateMoveButtons();
+      updateDefaultFormatControls();
+    });
+    document.getElementById('format' + i).addEventListener('input', () => {
+      updateMoveButtons();
+      updateDefaultFormatControls();
+    });
   }
 });
