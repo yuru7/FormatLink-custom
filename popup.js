@@ -24,21 +24,21 @@ const sendMessageToFrame = async (tabId, message, frameId) => {
   }
 };
 
+const hideCopiedResult = () => {
+  const resultElem = document.getElementById('copyResult');
+  resultElem.classList.remove('is-visible');
+};
+
 const populateText = formattedText => {
+  hideCopiedResult();
   const textElem = document.getElementById('textToCopy');
   textElem.value = formattedText;
   textElem.focus();
 };
 
-let copyResultTimeout;
-
 const showCopiedResult = () => {
   const resultElem = document.getElementById('copyResult');
   resultElem.classList.add('is-visible');
-  clearTimeout(copyResultTimeout);
-  copyResultTimeout = setTimeout(() => {
-    resultElem.classList.remove('is-visible');
-  }, 2500);
 };
 
 const copyLink = async formatID => {
@@ -189,7 +189,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       textarea.style.height = 'auto';
       textarea.style.height = textarea.scrollHeight + 'px';
     };
-    textarea.addEventListener('input', resize);
+    textarea.addEventListener('input', () => {
+      hideCopiedResult();
+      resize();
+    });
     textarea.addEventListener('keydown', event => {
       if (event.isComposing || !event.ctrlKey || event.key !== 'Enter') {
         return;
