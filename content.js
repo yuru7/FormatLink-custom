@@ -2,7 +2,12 @@
 
 var linkText;
 const setActiveFrame = () => {
-  chrome.runtime.sendMessage({ message: 'setActiveFrame' }).catch(() => {});
+  try {
+    const response = chrome.runtime.sendMessage({ message: 'setActiveFrame' });
+    response?.catch?.(() => {});
+  } catch {
+    // 拡張機能の再読み込み後に残った古いcontent scriptは無視する。
+  }
 };
 
 document.addEventListener('pointerdown', setActiveFrame);

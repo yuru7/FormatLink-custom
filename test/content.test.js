@@ -22,6 +22,7 @@ const loadContentScript = ({
   selection = emptySelection,
   hoveredText,
   iframes = [],
+  sendMessageThrows = false,
 } = {}) => {
   const listeners = new Map();
   const clipboard = {};
@@ -73,6 +74,9 @@ const loadContentScript = ({
     chrome: {
       runtime: {
         sendMessage(message) {
+          if (sendMessageThrows) {
+            throw new Error('Extension context invalidated');
+          }
           sentMessages.push(message);
           return Promise.resolve();
         },
@@ -258,6 +262,12 @@ test('iframe内の選択文字列を使い、ページURLとタイトルは外�
   );
   assert.equal(loaded.sentMessages.length, 1);
   assert.equal(loaded.sentMessages[0].message, 'setActiveFrame');
+});
+
+test('拡張機能のコンテキスト無効化時にフレーム通知の同期例外を無視する', () => {
+  const loaded = loadContentScript({ sendMessageThrows: true });
+
+  assert.doesNotThrow(() => loaded.listeners.get('pointerdown')());
 });
 
 test('不正なテンプレートはパースエラーになる', () => {
