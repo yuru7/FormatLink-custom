@@ -12,6 +12,8 @@ textarea {
   line-break: anywhere;
   overflow-wrap: anywhere;
   word-break: break-all;
+  font-family: monospace;
+  font-size: 0.88rem;
 }
 fieldset {
   border: none;
