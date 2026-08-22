@@ -6,22 +6,81 @@ const getOptions = async isDefault => {
   return response.options;
 }
 
-const restoreOptions = async () => {
-  const options = await getOptions();
-  for (let i = 1; i <= options.maxCount; ++i) {
+let defaultFormatID;
+let maxCount;
+
+const getFormItemCount = () => {
+  let count = 0;
+  while (count < maxCount) {
+    const nextIndex = count + 1;
+    const title = document.getElementById('title' + nextIndex).value;
+    const format = document.getElementById('format' + nextIndex).value;
+    if (title === '' || format === '') {
+      break;
+    }
+    ++count;
+  }
+  return count;
+};
+
+const updateMoveButtons = () => {
+  const itemCount = getFormItemCount();
+  document.querySelectorAll('.moveButton').forEach(button => {
+    const index = Number(button.dataset.index);
+    const offset = button.dataset.direction === 'up' ? -1 : 1;
+    button.disabled = index > itemCount || index + offset < 1 || index + offset > itemCount;
+  });
+};
+
+const moveOption = (index, direction) => {
+  const offset = direction === 'up' ? -1 : 1;
+  const targetIndex = index + offset;
+  const itemCount = getFormItemCount();
+  if (index < 1 || index > itemCount || targetIndex < 1 || targetIndex > itemCount) {
+    return;
+  }
+
+  for (const field of ['title', 'format', 'html']) {
+    const current = document.getElementById(field + index);
+    const target = document.getElementById(field + targetIndex);
+    if (field === 'html') {
+      [current.checked, target.checked] = [target.checked, current.checked];
+    } else {
+      [current.value, target.value] = [target.value, current.value];
+    }
+  }
+
+  if (defaultFormatID === index) {
+    defaultFormatID = targetIndex;
+  } else if (defaultFormatID === targetIndex) {
+    defaultFormatID = index;
+  }
+  updateMoveButtons();
+};
+
+const restoreForm = options => {
+  maxCount = options.maxCount;
+  defaultFormatID = options.defaultFormat;
+  for (let i = 1; i <= maxCount; ++i) {
     document.getElementById('title' + i).value = options['title' + i] || '';
     document.getElementById('format' + i).value = options['format' + i] || '';
     document.getElementById('html' + i).checked = !!options['html' + i];
   }
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
+  updateMoveButtons();
 };
 
-const saveOptions = async defaultFormatID => {
+const restoreOptions = async () => {
+  restoreForm(await getOptions());
+};
+
+const saveOptions = async defaultFormatIDToSave => {
   let options = await getOptions();
   try {
-    if (defaultFormatID) {
-      options.defaultFormat = defaultFormatID;
+    if (defaultFormatIDToSave !== undefined) {
+      defaultFormatID = defaultFormatIDToSave;
     }
+    options.defaultFormat = defaultFormatID;
     for (let i = 1; i <= options.maxCount; ++i) {
       options['title' + i] = document.getElementById('title' + i).value;
       options['format' + i] = document.getElementById('format' + i).value;
@@ -48,13 +107,8 @@ const saveOptions = async defaultFormatID => {
 
 const restoreDefaults = async () => {
   const options = await getOptions(true);
-  for (let i = 1; i <= options.maxCount; ++i) {
-    document.getElementById('title' + i).value = options['title' + i] || '';
-    document.getElementById('format' + i).value = options['format' + i] || '';
-    document.getElementById('html' + i).checked = !!options['html' + i];
-  }
-  document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
-  await saveOptions(options['defaultFormat']);
+  restoreForm(options);
+  await saveOptions();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -65,4 +119,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('restoreDefaultsButton').addEventListener('click', async e => {
     await restoreDefaults();
   });
+  document.querySelectorAll('.moveButton').forEach(button => {
+    button.addEventListener('click', () => {
+      moveOption(Number(button.dataset.index), button.dataset.direction);
+    });
+  });
+  for (let i = 1; i <= maxCount; ++i) {
+    document.getElementById('title' + i).addEventListener('input', updateMoveButtons);
+    document.getElementById('format' + i).addEventListener('input', updateMoveButtons);
+  }
 });
