@@ -113,7 +113,10 @@ const populateFormatGroup = options => {
     }
     btn.addEventListener('click', async e => {
       updateDefaultFormatButton();
-      await copyLink(e.target.value);
+      const result = await copyLink(e.target.value);
+      if (result) {
+        showCopiedResult();
+      }
     });
 
     const optTitle = options['title' + i];

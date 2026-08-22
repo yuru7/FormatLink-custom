@@ -124,7 +124,11 @@ const createPopup = responses => {
         },
         sendMessage(tabId, message, options) {
           sentMessages.push({ tabId, message, options });
-          return Promise.resolve(responses[responseIndex++]);
+          const response = responses[responseIndex++];
+          if (response instanceof Error) {
+            return Promise.reject(response);
+          }
+          return Promise.resolve(response);
         },
       },
     },
@@ -171,7 +175,7 @@ test('Link Textを編集するとcopied!を消す', async () => {
   assert.equal(popup.timers.length, 0);
 });
 
-test('Link Textをプログラムで置き換えるとcopied!を消す', async () => {
+test('Switch Formatを選択し直すとコピーしてcopied!を再表示する', async () => {
   const popup = createPopup([
     { result: '[Example](https://example.test)' },
     { result: '[Example](https://example.test?format=2)' },
@@ -180,7 +184,21 @@ test('Link Textをプログラムで置き換えるとcopied!を消す', async (
   await popup.initialize();
   await popup.elements.get('format1').dispatchEvent('click');
 
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
+  assert.equal(popup.timers.length, 0);
+});
+
+test('Switch Formatのコピーに失敗したらcopied!を表示しない', async () => {
+  const popup = createPopup([
+    { result: '[Example](https://example.test)' },
+    new Error('no receiving end'),
+  ]);
+
+  await popup.initialize();
+  await popup.elements.get('format1').dispatchEvent('click');
+
   assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
+  assert.equal(popup.elements.get('textToCopy').value, 'Failed to get link');
   assert.equal(popup.timers.length, 0);
 });
 
