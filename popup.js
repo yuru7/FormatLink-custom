@@ -142,7 +142,7 @@ const updateDefaultFormatButton = () => {
   const button = document.getElementById('saveDefaultFormatButton');
   const isDefault = String(getSelectedFormatID()) === String(defaultFormatID);
   button.textContent = isDefault
-    ? 'Already the default'
+    ? 'Current default'
     : 'Set as default';
   button.disabled = isDefault;
 };
