@@ -30,6 +30,17 @@ const populateText = formattedText => {
   textElem.focus();
 };
 
+let copyResultTimeout;
+
+const showCopiedResult = () => {
+  const resultElem = document.getElementById('copyResult');
+  resultElem.style.visibility = 'visible';
+  clearTimeout(copyResultTimeout);
+  copyResultTimeout = setTimeout(() => {
+    resultElem.style.visibility = 'hidden';
+  }, 3000);
+};
+
 const copyLink = async formatID => {
   const options = await getOptions();
   const format = options['format' + formatID];
@@ -51,7 +62,9 @@ const copyLink = async formatID => {
   });
   if (response) {
     populateText(response.result);
+    return true;
   }
+  return false;
 };
 
 const copyModifiedText = async (modifiedText, formatID) => {
@@ -140,7 +153,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     defaultFormatID = options.defaultFormat;
     populateFormatGroup(options);
     updateDefaultFormatButton();
-    await copyLink(options.defaultFormat);
+    const result = await copyLink(options.defaultFormat);
+    if (result) {
+      showCopiedResult();
+    }
   }
 
   document.getElementById('saveDefaultFormatButton').addEventListener('click', async () => {
@@ -161,11 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (formatID) {
       const result = await copyModifiedText(document.getElementById('textToCopy').value, formatID);
       if (result) {
-        const resultElem = document.getElementById('copyResult');
-        resultElem.style.visibility = 'visible';
-        setTimeout(() => {
-          resultElem.style.visibility = 'hidden';
-        }, 3000);
+        showCopiedResult();
       }
     }
   };
