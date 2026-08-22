@@ -1,5 +1,7 @@
 # Format Link for Chrome
 
+This project is a fork of [hnakamur/FormatLink-Chrome](https://github.com/hnakamur/FormatLink-Chrome). Thanks to the original author, hnakamur.
+
 ## Why do I need it?
 To format the link of the active tab instantly to use in Markdown, reST, HTML, Text, Textile or other formats.
 
@@ -135,31 +137,31 @@ I synthesized two icons (a pencil and a link) to produce ```icon.png```.
 ### Extension
 This extension "Format Link" are inspired by extensions below:
 
-## テストの実行
+## Running tests
 
-Node.js 18 以降を用意して、次のコマンドを実行してください。
+Requires Node.js 18 or later. Run:
 
 ```sh
 npm test
 ```
 
-## Chromeでのマニュアルテスト
+## Manual testing in Chrome
 
-依存関係なしでローカルテストページを起動できます。
+You can start a local test page with no extra dependencies.
 
-1. `chrome://extensions` でデベロッパーモードを有効にします。
-2. 「パッケージ化されていない拡張機能を読み込む」で、このリポジトリのディレクトリを選択します。
-3. 次のコマンドでテストサーバーを起動します。
+1. Enable Developer mode at `chrome://extensions`.
+2. Click "Load unpacked" and select this repository directory.
+3. Start the test server:
 
    ```sh
    npm run manual-test
    ```
 
-4. `http://127.0.0.1:8080/` をChromeで開きます。
+4. Open `http://127.0.0.1:8080/` in Chrome.
 
-テストページには、iframeなし、同一オリジンiframe、クロスオリジンiframeの3種類を用意しています。テスト終了時はサーバー上で `Ctrl-C` を押してください。
+The test page covers three cases: no iframe, a same-origin iframe, and a cross-origin iframe. Press `Ctrl-C` in the terminal to stop the server when you are done.
 
-ポートが使用中の場合は、次のように変更できます。
+If the default ports are already in use, you can change them:
 
 ```sh
 PORT=18080 FRAME_PORT=18081 npm run manual-test
