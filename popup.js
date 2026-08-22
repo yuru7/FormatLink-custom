@@ -28,7 +28,6 @@ const populateText = formattedText => {
   const textElem = document.getElementById('textToCopy');
   textElem.value = formattedText;
   textElem.focus();
-  textElem.select();
 };
 
 const copyLink = async formatID => {
