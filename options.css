@@ -87,6 +87,9 @@ h1 {
   max-height: calc(4.5em + 8px);
   resize: none;
   overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-break: anywhere;
   overflow-wrap: anywhere;
 }
 
