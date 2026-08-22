@@ -8,6 +8,7 @@ const getOptions = async isDefault => {
 
 let defaultFormatID;
 let maxCount;
+let savedFormValues;
 
 const getFormItemCount = () => {
   let count = 0;
@@ -66,12 +67,33 @@ const moveOption = (index, direction) => {
   }
   updateMoveButtons();
   updateDefaultFormatControls();
+  updateSaveButton();
 };
 
 const resizeFormatField = textarea => {
   textarea.style.height = 'auto';
   const borders = textarea.offsetHeight - textarea.clientHeight;
   textarea.style.height = (textarea.scrollHeight + borders) + 'px';
+};
+
+const collectFormValues = () => {
+  const values = { defaultFormat: defaultFormatID };
+  for (let i = 1; i <= maxCount; ++i) {
+    values['title' + i] = document.getElementById('title' + i).value;
+    values['format' + i] = document.getElementById('format' + i).value;
+    values['selectionNewlines' + i] = document.getElementById('selectionNewlines' + i).value;
+    values['html' + i] = document.getElementById('html' + i).checked;
+  }
+  values['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
+  return values;
+};
+
+const updateSaveButton = () => {
+  const current = collectFormValues();
+  const hasChanges = Object.keys(current).some(key =>
+    current[key] !== savedFormValues[key]
+  );
+  document.getElementById('saveButton').disabled = !hasChanges;
 };
 
 const restoreForm = options => {
@@ -90,6 +112,8 @@ const restoreForm = options => {
   for (let i = 1; i <= maxCount; ++i) {
     resizeFormatField(document.getElementById('format' + i));
   }
+  savedFormValues = collectFormValues();
+  updateSaveButton();
 };
 
 const restoreOptions = async () => {
@@ -120,6 +144,8 @@ const saveOptions = async defaultFormatIDToSave => {
   }
   try {
     await chrome.storage.sync.set(options);
+    savedFormValues = collectFormValues();
+    updateSaveButton();
   } catch (err) {
     console.error("failed to save options", err);
   }
@@ -152,19 +178,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       moveOption(Number(button.dataset.index), button.dataset.direction);
     });
   });
+  document.getElementById('createSubmenusCheckbox').addEventListener('change', () => {
+    updateSaveButton();
+  });
   for (let i = 1; i <= maxCount; ++i) {
     document.getElementById('defaultFormat' + i).addEventListener('change', event => {
       defaultFormatID = Number(event.target.value);
       updateDefaultFormatControls();
+      updateSaveButton();
     });
     document.getElementById('title' + i).addEventListener('input', () => {
       updateMoveButtons();
       updateDefaultFormatControls();
+      updateSaveButton();
     });
     document.getElementById('format' + i).addEventListener('input', () => {
       updateMoveButtons();
       updateDefaultFormatControls();
+      updateSaveButton();
       resizeFormatField(document.getElementById('format' + i));
+    });
+    document.getElementById('selectionNewlines' + i).addEventListener('change', () => {
+      updateSaveButton();
+    });
+    document.getElementById('html' + i).addEventListener('change', () => {
+      updateSaveButton();
     });
   }
 });

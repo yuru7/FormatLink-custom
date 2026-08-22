@@ -218,15 +218,56 @@ test('デフォルト項目のラジオで既定形式を選択して保存す�
   const page = createOptionsPage();
   await page.initialize();
 
+  assert.equal(page.elements.get('saveButton').disabled, true);
+
   const radio = page.elements.get('defaultFormat1');
   radio.checked = true;
   await radio.dispatchEvent('change');
 
   assert.equal(page.elements.get('defaultFormat1').checked, true);
   assert.equal(page.elements.get('defaultFormat2').checked, false);
+  assert.equal(page.elements.get('saveButton').disabled, false);
 
   await page.elements.get('saveButton').click();
   assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
+  assert.equal(page.elements.get('saveButton').disabled, true);
+});
+
+test('Saveボタンは変更があるときだけ有効になる', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const saveButton = page.elements.get('saveButton');
+  assert.equal(saveButton.disabled, true);
+
+  page.elements.get('title1').value = 'Changed';
+  await page.elements.get('title1').dispatchEvent('input');
+  assert.equal(saveButton.disabled, false);
+
+  page.elements.get('html1').checked = true;
+  await page.elements.get('html1').dispatchEvent('change');
+  assert.equal(saveButton.disabled, false);
+
+  page.elements.get('selectionNewlines1').value = 'preserve';
+  await page.elements.get('selectionNewlines1').dispatchEvent('change');
+  assert.equal(saveButton.disabled, false);
+
+  page.elements.get('createSubmenusCheckbox').checked = false;
+  await page.elements.get('createSubmenusCheckbox').dispatchEvent('change');
+  assert.equal(saveButton.disabled, false);
+
+  await saveButton.click();
+  assert.equal(saveButton.disabled, true);
+
+  // 保存済みの値に戻せば再び無効になる
+  page.elements.get('title1').value = 'Changed';
+  await page.elements.get('title1').dispatchEvent('input');
+  assert.equal(saveButton.disabled, true);
+
+  // そこから値を変えると有効になる
+  page.elements.get('title1').value = 'One';
+  await page.elements.get('title1').dispatchEvent('input');
+  assert.equal(saveButton.disabled, false);
 });
 
 test('オプション復元時にFormat欄の高さを内容に合わせてリサイズする', async () => {

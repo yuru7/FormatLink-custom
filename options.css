@@ -144,13 +144,22 @@ h1 {
   border-radius: 4px;
 }
 
-#saveButton:hover {
+#saveButton:hover:not(:disabled) {
   background-color: light-dark(#0862ca, #388bfd);
+}
+
+#saveButton:disabled {
+  background-color: light-dark(#d0d7de, #30363d);
+  color: light-dark(#8c959f, #6e7681);
 }
 
 button {
   padding: 4px 12px;
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
 }
 
 @media (max-width: 32rem) {
