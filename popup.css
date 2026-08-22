@@ -38,6 +38,7 @@ body {
 .section-label,
 .preview-header label {
   font-size: 0.87rem;
+  transform: translateX(-2px);
 }
 
 textarea {
@@ -95,4 +96,60 @@ button {
 .footer {
   padding-top: 8px;
   border-top: 1px solid #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: rgb(36, 41, 46);
+    color: #f0f6fc;
+  }
+
+  textarea {
+    background-color: #0d1117;
+    color: #f0f6fc;
+    border: 1px solid #57606a;
+    border-radius: 4px;
+  }
+
+  textarea:focus {
+    outline: 2px solid #58a6ff;
+    outline-offset: -1px;
+  }
+
+  button {
+    background-color: #21262d;
+    color: #f0f6fc;
+    border: 1px solid #8b949e;
+    border-radius: 4px;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #30363d;
+  }
+
+  button:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 1px;
+  }
+
+  button:disabled {
+    color: #8b949e;
+    border-color: #57606a;
+  }
+
+  input[type='radio'] {
+    accent-color: #58a6ff;
+  }
+
+  #copyResult {
+    color: #7ee787;
+  }
+
+  .footer {
+    border-top-color: #57606a;
+  }
 }
