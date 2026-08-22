@@ -68,6 +68,12 @@ const moveOption = (index, direction) => {
   updateDefaultFormatControls();
 };
 
+const resizeFormatField = textarea => {
+  textarea.style.height = 'auto';
+  const borders = textarea.offsetHeight - textarea.clientHeight;
+  textarea.style.height = (textarea.scrollHeight + borders) + 'px';
+};
+
 const restoreForm = options => {
   maxCount = options.maxCount;
   defaultFormatID = options.defaultFormat;
@@ -81,6 +87,9 @@ const restoreForm = options => {
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
   updateMoveButtons();
   updateDefaultFormatControls();
+  for (let i = 1; i <= maxCount; ++i) {
+    resizeFormatField(document.getElementById('format' + i));
+  }
 };
 
 const restoreOptions = async () => {
@@ -155,6 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('format' + i).addEventListener('input', () => {
       updateMoveButtons();
       updateDefaultFormatControls();
+      resizeFormatField(document.getElementById('format' + i));
     });
   }
 });

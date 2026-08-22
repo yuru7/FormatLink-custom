@@ -18,6 +18,10 @@ const createElement = (id, properties = {}) => {
     value: '',
     checked: false,
     disabled: false,
+    style: {},
+    scrollHeight: 0,
+    offsetHeight: 0,
+    clientHeight: 0,
     ...properties,
     addEventListener(type, listener) {
       listeners.set(type, listener);
@@ -223,6 +227,39 @@ test('デフォルト項目のラジオで既定形式を選択して保存す�
 
   await page.elements.get('saveButton').click();
   assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
+});
+
+test('オプション復元時にFormat欄の高さを内容に合わせてリサイズする', async () => {
+  const page = createOptionsPage();
+  page.elements.get('format1').scrollHeight = 63;
+
+  await page.initialize();
+
+  assert.equal(page.elements.get('format1').style.height, '63px');
+});
+
+test('Format入力の折り返しに応じて高さを拡張する', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const textarea = page.elements.get('format1');
+  textarea.scrollHeight = 90;
+  await textarea.dispatchEvent('input');
+
+  assert.equal(textarea.style.height, '90px');
+});
+
+test('Format欄の高さに枠線の上下分を加算する', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const textarea = page.elements.get('format1');
+  textarea.scrollHeight = 90;
+  textarea.offsetHeight = 22;
+  textarea.clientHeight = 20;
+  await textarea.dispatchEvent('input');
+
+  assert.equal(textarea.style.height, '92px');
 });
 
 test('既定形式の行が空欄になったら保存時に最初の入力済み行へ正規化する', async () => {

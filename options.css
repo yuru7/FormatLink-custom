@@ -1,25 +1,179 @@
-form {
+:root {
+  color-scheme: light dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1rem;
+  font: 14px/1.5 system-ui, sans-serif;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+}
+
+#formatList {
   display: grid;
-  grid-template-columns: 2rem 4rem 12rem 1fr 14rem 4rem;
-  max-width: 80rem;
-  grid-gap: 8px 8px;
+  grid-template-columns: 1fr;
+  gap: 1rem;
 }
-input {
-  font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
+
+.formatItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid #c9cdd3;
+  border-radius: 6px;
 }
-.label {
+
+.formatItemHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formatItemTitle {
   font-weight: bold;
 }
+
+.defaultLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
 .moveControls {
   display: flex;
   gap: 2px;
+  margin-left: auto;
 }
+
 .moveButton {
-  padding: 0 4px;
+  padding: 2px 8px;
 }
+
+.formatField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.formatField input[type='text'],
+.formatField textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 3px 6px;
+  font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
+}
+
+.formatField textarea {
+  line-height: 1.5;
+  border: 1px solid #c9cdd3;
+  border-radius: 4px;
+  min-height: calc(1.5em + 8px);
+  max-height: calc(4.5em + 8px);
+  resize: none;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+.formatField label,
+.formatOptions label {
+  font-size: 0.85rem;
+  color: #57606a;
+}
+
+.formatOptions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.formatOptions select {
+  padding: 3px 6px;
+}
+
+.htmlOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.htmlOption label {
+  cursor: pointer;
+}
+
 #createSubmenusRow {
-  grid-column: span 6;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
 }
+
 #btnGroup {
-  grid-column: span 6;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  background: Canvas;
+  border-top: 1px solid #c9cdd3;
+}
+
+#saveButton {
+  background-color: light-dark(#0969da, #1f6feb);
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+#saveButton:hover {
+  background-color: light-dark(#0862ca, #388bfd);
+}
+
+button {
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 32rem) {
+  #btnGroup button {
+    flex: 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .formatItem {
+    border-color: #3d444d;
+  }
+
+  .formatField label,
+  .formatOptions label {
+    color: #aab0b6;
+  }
+
+  #btnGroup {
+    border-top-color: #3d444d;
+  }
+
+  .formatField textarea {
+    border-color: #3d444d;
+  }
 }

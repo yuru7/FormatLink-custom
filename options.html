@@ -5,7 +5,6 @@
   <meta charset="utf-8" />
   <title>FormatLink settings</title>
   <link rel="stylesheet" href="options.css">
-  </link>
   <script src="options.js"></script>
 </head>
 
@@ -13,150 +12,327 @@
   <h1>FormatLink settings</h1>
   <form>
 
-    <span class="label">Default</span>
-    <span class="label">Move</span>
-    <span class="label">Title</span>
-    <span class="label">Format</span>
-    <span class="label">Selected text line breaks</span>
-    <span class="label">Copy as HTML</span>
+    <div id="formatList">
 
-    <input type="radio" name="defaultFormat" id="defaultFormat1" value="1" aria-label="Use format 1 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="1" data-direction="up" aria-label="Move item 1 up"
-        title="Move up" disabled>↑</button>
-      <button type="button" class="moveButton" data-index="1" data-direction="down" aria-label="Move item 1 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title1" placeholder="Title1"></input>
-    <input type="text" id="format1" placeholder="Format1"></input>
-    <select id="selectionNewlines1" aria-label="Selected text line breaks for format 1">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html1"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 1</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat1" value="1" aria-label="Use format 1 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="1" data-direction="up" aria-label="Move item 1 up"
+              title="Move up" disabled>↑</button>
+            <button type="button" class="moveButton" data-index="1" data-direction="down" aria-label="Move item 1 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title1">Title</label>
+          <input type="text" id="title1">
+        </div>
+        <div class="formatField">
+          <label for="format1">Format</label>
+          <textarea id="format1" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines1">Selected text line breaks</label>
+          <select id="selectionNewlines1" aria-label="Selected text line breaks for format 1">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html1" aria-label="Copy as HTML for format 1">
+            <label for="html1">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat2" value="2" aria-label="Use format 2 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="2" data-direction="up" aria-label="Move item 2 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="2" data-direction="down" aria-label="Move item 2 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title2" placeholder="Title2"></input>
-    <input type="text" id="format2" placeholder="Format2"></input>
-    <select id="selectionNewlines2" aria-label="Selected text line breaks for format 2">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html2"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 2</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat2" value="2" aria-label="Use format 2 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="2" data-direction="up" aria-label="Move item 2 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="2" data-direction="down" aria-label="Move item 2 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title2">Title</label>
+          <input type="text" id="title2">
+        </div>
+        <div class="formatField">
+          <label for="format2">Format</label>
+          <textarea id="format2" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines2">Selected text line breaks</label>
+          <select id="selectionNewlines2" aria-label="Selected text line breaks for format 2">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html2" aria-label="Copy as HTML for format 2">
+            <label for="html2">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat3" value="3" aria-label="Use format 3 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="3" data-direction="up" aria-label="Move item 3 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="3" data-direction="down" aria-label="Move item 3 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title3" placeholder="Title3"></input>
-    <input type="text" id="format3" placeholder="Format3"></input>
-    <select id="selectionNewlines3" aria-label="Selected text line breaks for format 3">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html3"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 3</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat3" value="3" aria-label="Use format 3 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="3" data-direction="up" aria-label="Move item 3 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="3" data-direction="down" aria-label="Move item 3 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title3">Title</label>
+          <input type="text" id="title3">
+        </div>
+        <div class="formatField">
+          <label for="format3">Format</label>
+          <textarea id="format3" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines3">Selected text line breaks</label>
+          <select id="selectionNewlines3" aria-label="Selected text line breaks for format 3">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html3" aria-label="Copy as HTML for format 3">
+            <label for="html3">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat4" value="4" aria-label="Use format 4 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="4" data-direction="up" aria-label="Move item 4 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="4" data-direction="down" aria-label="Move item 4 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title4" placeholder="Title4"></input>
-    <input type="text" id="format4" placeholder="Format4"></input>
-    <select id="selectionNewlines4" aria-label="Selected text line breaks for format 4">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html4"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 4</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat4" value="4" aria-label="Use format 4 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="4" data-direction="up" aria-label="Move item 4 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="4" data-direction="down" aria-label="Move item 4 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title4">Title</label>
+          <input type="text" id="title4">
+        </div>
+        <div class="formatField">
+          <label for="format4">Format</label>
+          <textarea id="format4" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines4">Selected text line breaks</label>
+          <select id="selectionNewlines4" aria-label="Selected text line breaks for format 4">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html4" aria-label="Copy as HTML for format 4">
+            <label for="html4">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat5" value="5" aria-label="Use format 5 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="5" data-direction="up" aria-label="Move item 5 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="5" data-direction="down" aria-label="Move item 5 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title5" placeholder="Title5"></input>
-    <input type="text" id="format5" placeholder="Format5"></input>
-    <select id="selectionNewlines5" aria-label="Selected text line breaks for format 5">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html5"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 5</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat5" value="5" aria-label="Use format 5 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="5" data-direction="up" aria-label="Move item 5 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="5" data-direction="down" aria-label="Move item 5 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title5">Title</label>
+          <input type="text" id="title5">
+        </div>
+        <div class="formatField">
+          <label for="format5">Format</label>
+          <textarea id="format5" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines5">Selected text line breaks</label>
+          <select id="selectionNewlines5" aria-label="Selected text line breaks for format 5">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html5" aria-label="Copy as HTML for format 5">
+            <label for="html5">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat6" value="6" aria-label="Use format 6 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="6" data-direction="up" aria-label="Move item 6 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="6" data-direction="down" aria-label="Move item 6 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title6" placeholder="Title6"></input>
-    <input type="text" id="format6" placeholder="Format6"></input>
-    <select id="selectionNewlines6" aria-label="Selected text line breaks for format 6">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html6"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 6</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat6" value="6" aria-label="Use format 6 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="6" data-direction="up" aria-label="Move item 6 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="6" data-direction="down" aria-label="Move item 6 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title6">Title</label>
+          <input type="text" id="title6">
+        </div>
+        <div class="formatField">
+          <label for="format6">Format</label>
+          <textarea id="format6" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines6">Selected text line breaks</label>
+          <select id="selectionNewlines6" aria-label="Selected text line breaks for format 6">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html6" aria-label="Copy as HTML for format 6">
+            <label for="html6">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat7" value="7" aria-label="Use format 7 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="7" data-direction="up" aria-label="Move item 7 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="7" data-direction="down" aria-label="Move item 7 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title7" placeholder="Title7"></input>
-    <input type="text" id="format7" placeholder="Format7"></input>
-    <select id="selectionNewlines7" aria-label="Selected text line breaks for format 7">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html7"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 7</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat7" value="7" aria-label="Use format 7 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="7" data-direction="up" aria-label="Move item 7 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="7" data-direction="down" aria-label="Move item 7 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title7">Title</label>
+          <input type="text" id="title7">
+        </div>
+        <div class="formatField">
+          <label for="format7">Format</label>
+          <textarea id="format7" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines7">Selected text line breaks</label>
+          <select id="selectionNewlines7" aria-label="Selected text line breaks for format 7">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html7" aria-label="Copy as HTML for format 7">
+            <label for="html7">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat8" value="8" aria-label="Use format 8 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="8" data-direction="up" aria-label="Move item 8 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="8" data-direction="down" aria-label="Move item 8 down"
-        title="Move down">↓</button>
-    </div>
-    <input type="text" id="title8" placeholder="Title8"></input>
-    <input type="text" id="format8" placeholder="Format8"></input>
-    <select id="selectionNewlines8" aria-label="Selected text line breaks for format 8">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html8"></input>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 8</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat8" value="8" aria-label="Use format 8 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="8" data-direction="up" aria-label="Move item 8 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="8" data-direction="down" aria-label="Move item 8 down"
+              title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title8">Title</label>
+          <input type="text" id="title8">
+        </div>
+        <div class="formatField">
+          <label for="format8">Format</label>
+          <textarea id="format8" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines8">Selected text line breaks</label>
+          <select id="selectionNewlines8" aria-label="Selected text line breaks for format 8">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html8" aria-label="Copy as HTML for format 8">
+            <label for="html8">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
 
-    <input type="radio" name="defaultFormat" id="defaultFormat9" value="9" aria-label="Use format 9 as default">
-    <div class="moveControls">
-      <button type="button" class="moveButton" data-index="9" data-direction="up" aria-label="Move item 9 up"
-        title="Move up">↑</button>
-      <button type="button" class="moveButton" data-index="9" data-direction="down" aria-label="Move item 9 down"
-        title="Move down" disabled>↓</button>
+      <div class="formatItem">
+        <div class="formatItemHeader">
+          <span class="formatItemTitle">Format 9</span>
+          <label class="defaultLabel">
+            <input type="radio" name="defaultFormat" id="defaultFormat9" value="9" aria-label="Use format 9 as default">
+            Default
+          </label>
+          <div class="moveControls">
+            <button type="button" class="moveButton" data-index="9" data-direction="up" aria-label="Move item 9 up"
+              title="Move up">↑</button>
+            <button type="button" class="moveButton" data-index="9" data-direction="down" aria-label="Move item 9 down"
+              title="Move down" disabled>↓</button>
+          </div>
+        </div>
+        <div class="formatField">
+          <label for="title9">Title</label>
+          <input type="text" id="title9">
+        </div>
+        <div class="formatField">
+          <label for="format9">Format</label>
+          <textarea id="format9" rows="1"></textarea>
+        </div>
+        <div class="formatOptions">
+          <label for="selectionNewlines9">Selected text line breaks</label>
+          <select id="selectionNewlines9" aria-label="Selected text line breaks for format 9">
+            <option value="spaces" selected>Convert to spaces</option>
+            <option value="preserve">Keep newlines as-is</option>
+          </select>
+          <div class="htmlOption">
+            <input type="checkbox" id="html9" aria-label="Copy as HTML for format 9">
+            <label for="html9">Copy as HTML</label>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <input type="text" id="title9" placeholder="Title9"></input>
-    <input type="text" id="format9" placeholder="Format9"></input>
-    <select id="selectionNewlines9" aria-label="Selected text line breaks for format 9">
-      <option value="spaces" selected>Convert to spaces</option>
-      <option value="preserve">Keep newlines as-is</option>
-    </select>
-    <input type="checkbox" id="html9"></input>
 
     <div id="createSubmenusRow">
-      <input type="checkbox" id="createSubmenusCheckbox"></input>
+      <input type="checkbox" id="createSubmenusCheckbox">
       <label for="createSubmenusCheckbox">Create submenus</label>
     </div>
 
