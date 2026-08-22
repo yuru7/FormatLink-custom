@@ -34,11 +34,11 @@ let copyResultTimeout;
 
 const showCopiedResult = () => {
   const resultElem = document.getElementById('copyResult');
-  resultElem.style.visibility = 'visible';
+  resultElem.classList.add('is-visible');
   clearTimeout(copyResultTimeout);
   copyResultTimeout = setTimeout(() => {
-    resultElem.style.visibility = 'hidden';
-  }, 3000);
+    resultElem.classList.remove('is-visible');
+  }, 2500);
 };
 
 const copyLink = async formatID => {

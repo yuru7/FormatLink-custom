@@ -1,32 +1,98 @@
-body {
-  min-width:360px;
-  overflow-x:hidden;
-  margin: 4px;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
+
+body {
+  min-width: 360px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font: 0.8125rem/1.4 system-ui, sans-serif;
+}
+
+.preview,
+.formats,
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.preview-header,
+.section-label {
+  margin-bottom: -4px;
+}
+
+.preview-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.section-label,
+.preview-header label {
+  font-size: 0.87rem;
+}
+
 textarea {
   width: 100%;
   min-height: 4em;
   max-height: 12em;
+  margin: 0;
+  padding: 6px 8px;
   overflow-y: auto;
+  resize: none;
   white-space: pre-wrap;
   line-break: anywhere;
   overflow-wrap: anywhere;
   word-break: break-all;
-  font-family: monospace;
-  font-size: 0.88rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.87rem;
 }
-fieldset {
-  border: none;
-  margin: 4px;
-  padding: 0;
+
+button {
+  padding: 4px 10px;
 }
-label {
-  font: 90% 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif
-  margin: 0 4px 0 4px;
+
+#copyButton,
+#saveDefaultFormatButton {
+  width: 100%;
 }
+
+#formatGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+#formatGroup label {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin: 0;
+  cursor: pointer;
+}
+
 #copyResult {
-  font-size: 90%;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  font-size: 0.89375rem;
   color: #1c9503;
   font-weight: bold;
-  margin-left: 4px;
+  pointer-events: none;
+}
+
+#copyResult.is-visible {
+  opacity: 1;
+}
+
+.footer {
+  padding-top: 8px;
+  border-top: 1px solid #ddd;
 }

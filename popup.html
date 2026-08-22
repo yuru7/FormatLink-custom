@@ -5,32 +5,27 @@
   <meta charset="utf-8" />
   <title>FormatLink Extension's Popup</title>
   <link rel="stylesheet" href="popup.css">
-  </link>
   <script src="popup.js"></script>
 </head>
 
 <body>
-  <fieldset>
-    <label>Copied Text:</label>
-    <div>
-      <textarea id="textToCopy"></textarea>
+  <div class="preview">
+    <div class="preview-header">
+      <label for="textToCopy">Link Text:</label>
+      <span id="copyResult">copied!</span>
     </div>
-  </fieldset>
+    <textarea id="textToCopy"></textarea>
+    <button type="button" id="copyButton">Copy (Ctrl+Enter)</button>
+  </div>
 
-  <fieldset>
-    <button id="copyButton">Copy (Ctrl+Enter)</button>
-    <span id="copyResult" style="visibility: hidden;">copied!</span>
-  </fieldset>
+  <div class="formats">
+    <div class="section-label">Switch Format:</div>
+    <div id="formatGroup"></div>
+  </div>
 
-  <fieldset>
-    <label>Switch Format:</label>
-    <div id="formatGroup">
-    </div>
-  </fieldset>
-  <hr>
-  <fieldset>
-    <button id="saveDefaultFormatButton">Set as default</button>
-  </fieldset>
+  <div class="footer">
+    <button type="button" id="saveDefaultFormatButton">Set as default</button>
+  </div>
 </body>
 
 </html>

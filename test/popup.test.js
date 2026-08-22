@@ -18,6 +18,7 @@ const createPopup = responses => {
 
   const createElement = id => {
     const listeners = new Map();
+    const classNames = new Set();
     return {
       id,
       value: '',
@@ -26,6 +27,17 @@ const createPopup = responses => {
       style: {},
       scrollHeight: 40,
       children: [],
+      classList: {
+        add(name) {
+          classNames.add(name);
+        },
+        remove(name) {
+          classNames.delete(name);
+        },
+        contains(name) {
+          return classNames.has(name);
+        },
+      },
       addEventListener(type, listener) {
         listeners.set(type, listener);
       },
@@ -57,7 +69,6 @@ const createPopup = responses => {
   for (const id of ['textToCopy', 'formatGroup', 'saveDefaultFormatButton', 'copyButton', 'copyResult']) {
     elements.set(id, createElement(id));
   }
-  elements.get('copyResult').style.visibility = 'hidden';
 
   let responseIndex = 0;
   const context = {
@@ -132,12 +143,12 @@ test('初期コピー成功時にcopied!を一時表示する', async () => {
 
   await popup.initialize();
 
-  assert.equal(popup.elements.get('copyResult').style.visibility, 'visible');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
   assert.equal(popup.timers.length, 1);
   assert.equal(popup.timers[0].delay, 3000);
 
   popup.timers[0].callback();
-  assert.equal(popup.elements.get('copyResult').style.visibility, 'hidden');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
 });
 
 test('初期コピー失敗時はcopied!を表示しない', async () => {
@@ -145,7 +156,7 @@ test('初期コピー失敗時はcopied!を表示しない', async () => {
 
   await popup.initialize();
 
-  assert.equal(popup.elements.get('copyResult').style.visibility, 'hidden');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
   assert.equal(popup.timers.length, 0);
 });
 
@@ -160,8 +171,8 @@ test('copied!の連続表示では前のタイマーを解除する', async () =
 
   assert.equal(popup.timers.length, 2);
   assert.equal(popup.timers[0].cleared, true);
-  assert.equal(popup.elements.get('copyResult').style.visibility, 'visible');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
 
   popup.timers[1].callback();
-  assert.equal(popup.elements.get('copyResult').style.visibility, 'hidden');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
 });
