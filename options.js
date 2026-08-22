@@ -40,7 +40,7 @@ const moveOption = (index, direction) => {
     return;
   }
 
-  for (const field of ['title', 'format', 'html']) {
+  for (const field of ['title', 'format', 'html', 'selectionNewlines']) {
     const current = document.getElementById(field + index);
     const target = document.getElementById(field + targetIndex);
     if (field === 'html') {
@@ -64,6 +64,8 @@ const restoreForm = options => {
   for (let i = 1; i <= maxCount; ++i) {
     document.getElementById('title' + i).value = options['title' + i] || '';
     document.getElementById('format' + i).value = options['format' + i] || '';
+    document.getElementById('selectionNewlines' + i).value =
+      options['selectionNewlines' + i] || 'spaces';
     document.getElementById('html' + i).checked = !!options['html' + i];
   }
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
@@ -84,6 +86,8 @@ const saveOptions = async defaultFormatIDToSave => {
     for (let i = 1; i <= options.maxCount; ++i) {
       options['title' + i] = document.getElementById('title' + i).value;
       options['format' + i] = document.getElementById('format' + i).value;
+      options['selectionNewlines' + i] =
+        document.getElementById('selectionNewlines' + i).value;
       options['html' + i] = document.getElementById('html' + i).checked ? 1 : 0;
     }
     options['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;

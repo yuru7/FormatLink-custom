@@ -153,6 +153,63 @@ test('Windowsでは改行をCRLFに変換する', () => {
   );
 });
 
+test('選択文字列の改行を空白に変換または保持する', () => {
+  const selection = {
+    rangeCount: 1,
+    toString: () => 'first\r\nsecond\n\nthird',
+    getRangeAt: () => ({
+      startContainer: {
+        firstChild: null,
+        nextSibling: null,
+        parentNode: null,
+      },
+      endContainer: {},
+    }),
+  };
+  const { formatLinkAsText } = loadContentScript({ selection });
+
+  assert.equal(
+    formatLinkAsText('{{text}}', 'linux', undefined, undefined, undefined, 'spaces'),
+    'first second third'
+  );
+  assert.equal(
+    formatLinkAsText('{{text}}', 'linux', undefined, undefined, undefined, 'preserve'),
+    'first\r\nsecond\n\nthird'
+  );
+});
+
+test('選択文字列の改行周辺の空白も含めて空白1個にまとめる', () => {
+  const selection = {
+    rangeCount: 1,
+    toString: () => 'first \r\n\t\r\n second',
+    getRangeAt: () => ({
+      startContainer: {
+        firstChild: null,
+        nextSibling: null,
+        parentNode: null,
+      },
+      endContainer: {},
+    }),
+  };
+  const { formatLinkAsText } = loadContentScript({ selection });
+
+  assert.equal(
+    formatLinkAsText('{{text}}', 'linux', undefined, undefined, undefined, 'spaces'),
+    'first second'
+  );
+});
+
+test('選択文字列以外の改行は変換しない', () => {
+  const { formatLinkAsText } = loadContentScript({
+    title: 'first\r\nsecond',
+  });
+
+  assert.equal(
+    formatLinkAsText('{{text}}', 'linux', undefined, undefined, undefined, 'spaces'),
+    'first\r\nsecond'
+  );
+});
+
 test('コンテキストメニューのリンクとmouseoverのリンク文字列を使う', () => {
   const { formatLinkAsText } = loadContentScript({
     title: 'Page title',

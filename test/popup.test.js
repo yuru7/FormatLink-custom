@@ -71,6 +71,7 @@ const createPopup = responses => {
   }
 
   let responseIndex = 0;
+  const sentMessages = [];
   const context = {
     console: { error() {} },
     document: {
@@ -106,6 +107,7 @@ const createPopup = responses => {
                 count: 1,
                 title1: 'Markdown',
                 format1: '[{{text}}]({{url}})',
+                selectionNewlines1: 'spaces',
                 html1: false,
               },
             });
@@ -120,7 +122,8 @@ const createPopup = responses => {
         query() {
           return Promise.resolve([{ id: 1, url: 'https://example.test', title: 'Example' }]);
         },
-        sendMessage() {
+        sendMessage(tabId, message, options) {
+          sentMessages.push({ tabId, message, options });
           return Promise.resolve(responses[responseIndex++]);
         },
       },
@@ -131,6 +134,7 @@ const createPopup = responses => {
 
   return {
     elements,
+    sentMessages,
     timers,
     async initialize() {
       await documentListeners.get('DOMContentLoaded')();
@@ -144,6 +148,7 @@ test('初期コピー成功時にcopied!を表示する', async () => {
   await popup.initialize();
 
   assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
+  assert.equal(popup.sentMessages[0].message.selectionNewlines, 'spaces');
   assert.equal(popup.timers.length, 0);
 });
 

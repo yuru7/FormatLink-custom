@@ -44,6 +44,7 @@ const showCopiedResult = () => {
 const copyLink = async formatID => {
   const options = await getOptions();
   const format = options['format' + formatID];
+  const selectionNewlines = options['selectionNewlines' + formatID];
   const asHTML = options['html' + formatID];
 
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -51,6 +52,7 @@ const copyLink = async formatID => {
   const response = await sendMessageToFrame(tabs[0].id, {
     message: "copyLink",
     format,
+    selectionNewlines,
     asHTML,
     platformOs: chrome.runtime.PlatformOs,
     pageUrl: tabs[0].url,

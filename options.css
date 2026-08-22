@@ -1,6 +1,6 @@
 form {
   display: grid;
-  grid-template-columns: 4rem 12rem 1fr 4rem;
+  grid-template-columns: 4rem 12rem 1fr 14rem 4rem;
   max-width: 80rem;
   grid-gap: 8px 8px;
 }
@@ -18,8 +18,8 @@ input {
   padding: 0 4px;
 }
 #createSubmenusRow {
-  grid-column: span 4;
+  grid-column: span 5;
 }
 #btnGroup {
-  grid-column: span 4;
+  grid-column: span 5;
 }

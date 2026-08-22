@@ -7,30 +7,39 @@ const DEFAULT_OPTIONS = {
   "title1": "Markdown",
   "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\(\",\"%28\").s(\"\\\\)\",\"%29\")}})",
   "html1": 0,
+  "selectionNewlines1": "spaces",
   "title2": "Text",
   "format2": "{{text}} {{url}}",
   "html2": 0,
+  "selectionNewlines2": "spaces",
   "title3": 'HTML',
   "format3": "<a href=\"{{url.s(\"\\\"\",\"&quot;\")}}\">{{text.s(\"<\",\"&lt;\")}}</a>",
   "html3": 1,
+  "selectionNewlines3": "spaces",
   "title4": "reST",
   "format4": "`{{text}} <{{url}}>`_",
   "html4": 0,
+  "selectionNewlines4": "spaces",
   "title5": "LaTeX",
   "format5": "\\\\href\\{{{url}}\\}\\{{{text}}\\}",
   "html5": 0,
+  "selectionNewlines5": "spaces",
   "title6": "",
   "format6": "",
   "html6": 0,
+  "selectionNewlines6": "spaces",
   "title7": "",
   "format7": "",
   "html7": 0,
+  "selectionNewlines7": "spaces",
   "title8": "",
   "format8": "",
   "html8": 0,
+  "selectionNewlines8": "spaces",
   "title9": "",
   "format9": "",
   "html9": 0,
+  "selectionNewlines9": "spaces",
   "createSubmenus": true
 };
 
@@ -172,6 +181,7 @@ const copyLink = async (menuItemId, linkUrl, frameId, tab) => {
   const formatID = menuItemId === menuItemIdDefault ?
     options.defaultFormat : menuItemId.substr(menuItemIdPrefix.length);
   const format = options['format' + formatID];
+  const selectionNewlines = options['selectionNewlines' + formatID];
   const asHTML = options['html' + formatID];
 
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -180,6 +190,7 @@ const copyLink = async (menuItemId, linkUrl, frameId, tab) => {
   const response = await sendMessageToFrame(targetTab.id, {
     message: "copyLink",
     format,
+    selectionNewlines,
     asHTML,
     platformOs: chrome.runtime.PlatformOs,
     linkUrl,

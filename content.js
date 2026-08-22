@@ -55,7 +55,8 @@ const formatLinkAsText = (
   platformOs,
   linkUrl,
   pageUrlOverride,
-  titleOverride
+  titleOverride,
+  selectionNewlines
 ) => {
   const getFirstLinkInSelection = selection => {
     const getNextNode = (node, endNode) => {
@@ -194,7 +195,13 @@ const formatLinkAsText = (
   const selection = findSelection(document);
   console.log(`linkUrl=${linkUrl}, text=${text}, selection?.rangeCount=${selection?.rangeCount}`);
   if (selection?.rangeCount > 0) {
-    const selectionText = selection.toString().trim();
+    let selectionText = selection.toString().trim();
+    if (selectionNewlines === 'spaces') {
+      selectionText = selectionText.replace(
+        /[ \t]*(?:(?:\r\n?|\n)[ \t]*)+/g,
+        ' '
+      );
+    }
     if (!text && selectionText) {
       text = selectionText;
     }
@@ -243,7 +250,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       request.platformOs,
       request.linkUrl,
       request.pageUrl,
-      request.pageTitle
+      request.pageTitle,
+      request.selectionNewlines
     );
     copyToTheClipboard(textToCopy, request.asHTML).then(() => {
       sendResponse({ result: textToCopy });

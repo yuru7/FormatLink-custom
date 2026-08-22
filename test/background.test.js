@@ -114,6 +114,10 @@ test('初期フォーマットの順序と既定値', () => {
   assert.equal(options.defaultFormat, 1);
   assert.equal(options.format2, '{{text}} {{url}}');
   assert.deepEqual(
+    [1, 2, 3].map(i => options['selectionNewlines' + i]),
+    ['spaces', 'spaces', 'spaces']
+  );
+  assert.deepEqual(
     [1, 2, 3].map(i => options['html' + i]),
     [0, 0, 1]
   );
@@ -140,6 +144,7 @@ test('コンテキストメニューのframeIdを送信先に指定する', asyn
   assert.equal(loaded.sentMessages[0].options.frameId, 7);
   assert.equal(loaded.sentMessages[0].message.pageUrl, 'https://outer.test/page');
   assert.equal(loaded.sentMessages[0].message.pageTitle, 'Outer page');
+  assert.equal(loaded.sentMessages[0].message.selectionNewlines, 'spaces');
 });
 
 test('保存したアクティブフレームをコマンド送信に利用する', async () => {

@@ -41,6 +41,7 @@ const createOptionsPage = () => {
   for (let i = 1; i <= 9; ++i) {
     elements.set('title' + i, createElement('title' + i));
     elements.set('format' + i, createElement('format' + i));
+    elements.set('selectionNewlines' + i, createElement('selectionNewlines' + i));
     elements.set('html' + i, createElement('html' + i));
     for (const direction of ['up', 'down']) {
       buttons.push(createElement('move' + i + direction, {
@@ -70,12 +71,15 @@ const createOptionsPage = () => {
     defaultFormat: 2,
     title1: 'One',
     format1: 'format one',
+    selectionNewlines1: 'spaces',
     html1: 0,
     title2: 'Two',
     format2: 'format two',
+    selectionNewlines2: 'preserve',
     html2: 1,
     title3: 'Three',
     format3: 'format three',
+    selectionNewlines3: 'preserve',
     html3: 0,
     title4: '',
     format4: '',
@@ -130,6 +134,7 @@ const getButton = (page, index, direction) => page.buttons.find(button =>
 const getItemValues = page => [1, 2, 3].map(index => ({
   title: page.elements.get('title' + index).value,
   format: page.elements.get('format' + index).value,
+  selectionNewlines: page.elements.get('selectionNewlines' + index).value,
   html: page.elements.get('html' + index).checked,
 }));
 
@@ -142,6 +147,7 @@ test('項目の上下移動で入力値と既定形式が追従する', async ()
   assert.equal(getButton(page, 3, 'down').disabled, true);
   assert.equal(getButton(page, 4, 'up').disabled, true);
   assert.equal(getButton(page, 4, 'down').disabled, true);
+  assert.equal(page.elements.get('selectionNewlines4').value, 'spaces');
 
   const initialValues = getItemValues(page);
   page.exports.moveOption(1, 'up');
@@ -160,6 +166,7 @@ test('項目の上下移動で入力値と既定形式が追従する', async ()
   await page.elements.get('saveButton').click();
   assert.equal(page.savedOptions.at(-1).defaultFormat, 1);
   assert.equal(page.savedOptions.at(-1).title1, 'Two');
+  assert.equal(page.savedOptions.at(-1).selectionNewlines1, 'preserve');
   assert.equal(page.savedOptions.at(-1).html1, 1);
 
   assert.equal(getButton(page, 1, 'up').disabled, true);
