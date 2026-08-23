@@ -91,6 +91,56 @@ const copyModifiedText = async (modifiedText, formatID) => {
   return false;
 };
 
+// 選択中の複数タブそれぞれのタイトルとURLでフォーマットし、改行区切りで
+// 連結したテキストを1回だけクリップボードへコピーする。
+const copyHighlightedTabs = async formatID => {
+  const options = await getOptions();
+  const format = options['format' + formatID];
+  const asHTML = options['html' + formatID];
+
+  const tabs = await chrome.tabs.query({ highlighted: true, currentWindow: true });
+  if (tabs.length < 2) {
+    return false;
+  }
+
+  const newline = chrome.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
+  const texts = [];
+  for (const tab of tabs) {
+    try {
+      // {{text}} はタブタイトルのみを使うため、選択文字列は content script 側で無視される。
+      const response = await sendMessageToFrame(tab.id, {
+        message: "formatLink",
+        format,
+        platformOs: chrome.runtime.PlatformOs,
+      }, 0);
+      if (response?.text !== undefined) {
+        texts.push(response.text);
+      }
+    } catch (error) {
+      console.warn('Failed to format the tab:', tab.id, error);
+    }
+  }
+  if (texts.length === 0) {
+    populateText("Failed to get links");
+    return false;
+  }
+
+  const targetTab = tabs.find(tab => tab.active) ?? tabs[0];
+  const response = await sendMessageToFrame(targetTab.id, {
+    message: "copyModifiedText",
+    modifiedText: texts.join(newline),
+    asHTML,
+  }, 0)
+  .catch(error => {
+    console.error('Error copying modified text:', error);
+  });
+  if (response) {
+    populateText(response.result);
+    return true;
+  }
+  return false;
+};
+
 let defaultFormatID;
 
 const populateFormatGroup = options => {
@@ -163,6 +213,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       showCopiedResult();
     }
   }
+
+  const copyAllTabsButton = document.getElementById('copyAllTabsButton');
+  const highlightedTabs = await chrome.tabs.query({
+    highlighted: true,
+    currentWindow: true,
+  });
+  if (highlightedTabs.length >= 2) {
+    copyAllTabsButton.textContent =
+      `Copy all selected tabs (${highlightedTabs.length})`;
+    copyAllTabsButton.hidden = false;
+  }
+  copyAllTabsButton.addEventListener('click', async () => {
+    const formatID = getSelectedFormatID();
+    if (formatID) {
+      const result = await copyHighlightedTabs(formatID);
+      if (result) {
+        showCopiedResult();
+      }
+    }
+  });
 
   document.getElementById('saveDefaultFormatButton').addEventListener('click', async () => {
     const formatID = getSelectedFormatID();

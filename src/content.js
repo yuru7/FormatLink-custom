@@ -56,7 +56,8 @@ const formatLinkAsText = (
   linkUrl,
   pageUrlOverride,
   titleOverride,
-  selectionNewlines
+  selectionNewlines,
+  ignoreSelection = false
 ) => {
   const getFirstLinkInSelection = selection => {
     const getNextNode = (node, endNode) => {
@@ -192,7 +193,7 @@ const formatLinkAsText = (
   if (linkUrl) {
     text = linkText;
   }
-  const selection = findSelection(document);
+  const selection = ignoreSelection ? null : findSelection(document);
   console.log(`linkUrl=${linkUrl}, text=${text}, selection?.rangeCount=${selection?.rangeCount}`);
   if (selection?.rangeCount > 0) {
     let selectionText = selection.toString().trim();
@@ -263,5 +264,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({ result: textToCopy });
     });
     return true;
+  } else if (request.message === "formatLink") {
+    // 複数タブ用: コピーせず、タブ自身のタイトルとURLのみでフォーマットする。
+    // ページ内の選択文字列やリンクは無視する。
+    const text = formatLinkAsText(
+      request.format,
+      request.platformOs,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      true
+    );
+    sendResponse({ text });
   }
 });

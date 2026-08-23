@@ -36,6 +36,17 @@ If you want to copy the link in different format, you can press one of the radio
 
 Also if you want to change the default format, you can press the "Set as default" button in the popup, or select the "Default" radio button on the options page and save the changes.
 
+### multiple tabs
+Select multiple tabs in the tab strip (Ctrl/Cmd-click or Shift-click) and open the popup
+from the toolbar button. A "Copy all selected tabs (N)" button appears below the Copy
+button. Pressing it formats every selected tab with its own URL and title, joins the
+results with line breaks, and copies the combined text to the clipboard at once.
+
+In this mode, the value of `{{text}}` is always the tab title, and `{{url}}` the tab URL.
+Selected text on the page and links are ignored.
+If a selected tab cannot be formatted (e.g. a `chrome://` page), it is skipped with a
+warning logged. If the whole selection fails, "Failed to get links" is shown instead.
+
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
 In format settings, you can use the mini template language.

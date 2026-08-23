@@ -64,6 +64,7 @@ button {
 }
 
 #copyButton,
+#copyAllTabsButton,
 #saveDefaultFormatButton {
   width: 100%;
 }

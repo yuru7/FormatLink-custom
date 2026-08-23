@@ -81,7 +81,9 @@ const loadContentScript = ({
           return Promise.resolve();
         },
         onMessage: {
-          addListener() {},
+          addListener(listener) {
+            listeners.set('message', listener);
+          },
         },
       },
     },
@@ -347,4 +349,56 @@ test('クリップボードには常にtext/plainを設定し、HTML指定時は
     'text/plain': '<b>formatted</b>',
     'text/html': '<b>formatted</b>',
   });
+});
+
+test('複数タブ用フォーマットは選択文字列と選択内リンクを無視してタブの情報を使う', () => {
+  const loaded = loadContentScript({
+    title: 'Tab title',
+    url: 'https://tab.test/page',
+    hoveredText: 'Link label',
+    selection: {
+      rangeCount: 1,
+      toString: () => 'Selected text',
+      getRangeAt: () => ({}),
+    },
+  });
+
+  assert.equal(
+    loaded.formatLinkAsText(
+      '{{text}} <{{url}}>',
+      'linux',
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      true
+    ),
+    'Tab title <https://tab.test/page>'
+  );
+});
+
+test('formatLink メッセージはタブ自身のタイトルとURLのみでフォーマットする', async () => {
+  const loaded = loadContentScript({
+    title: 'Tab title',
+    url: 'https://tab.test/page',
+    selection: {
+      rangeCount: 1,
+      toString: () => 'Selected text',
+      getRangeAt: () => ({}),
+    },
+  });
+
+  const response = await new Promise(resolve => {
+    loaded.listeners.get('message')(
+      {
+        message: 'formatLink',
+        format: '{{text}} <{{url}}>',
+        platformOs: 'linux',
+      },
+      {},
+      resolve
+    );
+  });
+
+  assert.equal(response.text, 'Tab title <https://tab.test/page>');
 });
