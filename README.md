@@ -137,13 +137,7 @@ MIT License.
 
 ### Icon
 
-I synthesized two icons (a pencil and a link) to produce `src/icons/icon.png`.
-
-* A pencil icon from [Onebit free icon set](http://www.icojoy.com/articles/44/) © 2010 [Khodjaev Stanislav](http://www.icojoy.com/), used under a License: These icons are free to use in any kind of commercial or non-commercial project unlimited times.
-* A link icon from [Bremen icon set](http://pc.de/icons/#Bremen) © 2010 [Patricia Clausnitzer](http://pc.de/icons/), used under a [Creative Commons Attribution 3.0 License](hhttp://creativecommons.org/licenses/by/3.0/)
-
-### Extension
-This extension "Format Link" are inspired by extensions below:
+The extension icon (`src/icons/`) is based on the ["Link Ui" icon](https://www.svgrepo.com/svg/286903/link-ui) from [SVG Repo](https://www.svgrepo.com/), licensed under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) (public domain, no attribution required).
 
 ## Running tests
 
