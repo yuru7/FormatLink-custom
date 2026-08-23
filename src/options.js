@@ -10,6 +10,59 @@ let defaultFormatID;
 let maxCount;
 let savedFormValues;
 
+// プレビュー表示の既定サンプル値（例と分かるよう Example Domain を使用・選択なし相当）。
+// カードごとに独立して持ち、Preview 右上の鉛筆ボタンから編集できる（保存はされない）
+const DEFAULT_SAMPLE_VARS = {
+  url: 'https://example.com',
+  pageUrl: 'https://example.com',
+  title: 'Page Title',
+  text: 'Page Title',
+};
+
+const sampleVarsByIndex = new Map();
+const getSampleVars = index => {
+  if (!sampleVarsByIndex.has(index)) {
+    sampleVarsByIndex.set(index, { ...DEFAULT_SAMPLE_VARS });
+  }
+  return sampleVarsByIndex.get(index);
+};
+
+let sampleEditIndex;
+
+const openSampleEditor = index => {
+  sampleEditIndex = index;
+  const vars = getSampleVars(index);
+  document.getElementById('sampleTitle').value = vars.title;
+  document.getElementById('sampleUrl').value = vars.url;
+  document.getElementById('sampleDialog').showModal();
+};
+
+const closeSampleEditor = () => {
+  document.getElementById('sampleDialog').close();
+};
+
+const applySampleEdits = () => {
+  const vars = getSampleVars(sampleEditIndex);
+  vars.title = vars.text = document.getElementById('sampleTitle').value;
+  vars.url = vars.pageUrl = document.getElementById('sampleUrl').value;
+  closeSampleEditor();
+  updatePreview(sampleEditIndex);
+};
+
+const updatePreview = index => {
+  const output = document.getElementById('preview' + index);
+  try {
+    output.textContent = renderFormatTemplate(
+      document.getElementById('format' + index).value,
+      { ...getSampleVars(index), newline: '\n' }
+    );
+    output.classList.remove('invalidTemplate');
+  } catch (err) {
+    output.textContent = err.message;
+    output.classList.add('invalidTemplate');
+  }
+};
+
 const getFormItemCount = () => {
   let count = 0;
   while (count < maxCount) {
@@ -68,12 +121,29 @@ const moveOption = (index, direction) => {
   updateMoveButtons();
   updateDefaultFormatControls();
   updateSaveButton();
+  updatePreview(index);
+  updatePreview(targetIndex);
 };
 
 const resizeFormatField = textarea => {
   textarea.style.height = 'auto';
   const borders = textarea.offsetHeight - textarea.clientHeight;
   textarea.style.height = (textarea.scrollHeight + borders) + 'px';
+};
+
+const applyFormatValue = index => {
+  updateMoveButtons();
+  updateDefaultFormatControls();
+  updateSaveButton();
+  resizeFormatField(document.getElementById('format' + index));
+  updatePreview(index);
+};
+
+const insertVariable = (index, variable) => {
+  const textarea = document.getElementById('format' + index);
+  textarea.setRangeText(variable, textarea.selectionStart, textarea.selectionEnd, 'end');
+  textarea.focus();
+  applyFormatValue(index);
 };
 
 const collectFormValues = () => {
@@ -111,6 +181,7 @@ const restoreForm = options => {
   updateDefaultFormatControls();
   for (let i = 1; i <= maxCount; ++i) {
     resizeFormatField(document.getElementById('format' + i));
+    updatePreview(i);
   }
   savedFormValues = collectFormValues();
   updateSaveButton();
@@ -178,6 +249,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       moveOption(Number(button.dataset.index), button.dataset.direction);
     });
   });
+  document.getElementById('formatList').addEventListener('click', event => {
+    const chip = event.target.closest('.variableChip');
+    if (chip) {
+      insertVariable(Number(chip.dataset.index), '{{' + chip.dataset.variable + '}}');
+      return;
+    }
+    const editButton = event.target.closest('.editSampleButton');
+    if (!editButton) return;
+    openSampleEditor(Number(editButton.dataset.index));
+  });
+  document.getElementById('sampleCancelButton').addEventListener('click', closeSampleEditor);
+  document.getElementById('sampleSaveButton').addEventListener('click', applySampleEdits);
+  const handleSampleEnterKey = event => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    applySampleEdits();
+  };
+  document.getElementById('sampleTitle').addEventListener('keydown', handleSampleEnterKey);
+  document.getElementById('sampleUrl').addEventListener('keydown', handleSampleEnterKey);
   document.getElementById('createSubmenusCheckbox').addEventListener('change', () => {
     updateSaveButton();
   });
@@ -193,10 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateSaveButton();
     });
     document.getElementById('format' + i).addEventListener('input', () => {
-      updateMoveButtons();
-      updateDefaultFormatControls();
-      updateSaveButton();
-      resizeFormatField(document.getElementById('format' + i));
+      applyFormatValue(i);
     });
     document.getElementById('selectionNewlines' + i).addEventListener('change', () => {
       updateSaveButton();

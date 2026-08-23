@@ -32,8 +32,42 @@ test('options.htmlに必須の要素IDと属性が存在する', () => {
   for (let i = 1; i <= 9; ++i) {
     assert.ok(optionsHtml.includes(`id="title${i}"`), `missing title${i}`);
     assert.ok(optionsHtml.includes(`id="format${i}"`), `missing format${i}`);
+    assert.ok(optionsHtml.includes(`id="preview${i}"`), `missing preview${i}`);
     assert.ok(optionsHtml.includes(`id="selectionNewlines${i}"`), `missing selectionNewlines${i}`);
     assert.ok(optionsHtml.includes(`id="html${i}"`), `missing html${i}`);
     assert.ok(optionsHtml.includes(`id="defaultFormat${i}"`), `missing defaultFormat${i}`);
+  }
+});
+
+test('各カードに4種類の変数挿入チップがある', () => {
+  for (let i = 1; i <= 9; ++i) {
+    for (const variable of ['title', 'url', 'pageUrl', 'text']) {
+      const chip = `<button type="button" class="variableChip" data-index="${i}" data-variable="${variable}"`;
+      assert.ok(optionsHtml.includes(chip), `missing ${variable} chip for format ${i}`);
+    }
+  }
+});
+
+test('options.jsより前にテンプレート展開スクリプトを読み込む', () => {
+  const templateIndex = optionsHtml.indexOf('<script src="format-template.js">');
+  const optionsIndex = optionsHtml.indexOf('<script src="options.js">');
+
+  assert.ok(templateIndex !== -1, 'missing format-template.js script tag');
+  assert.ok(
+    templateIndex < optionsIndex,
+    'format-template.js must be loaded before options.js'
+  );
+});
+
+test('各カードのプレビューにサンプル編集ボタンがある', () => {
+  for (let i = 1; i <= 9; ++i) {
+    const button = `<button type="button" class="editSampleButton" data-index="${i}"`;
+    assert.ok(optionsHtml.includes(button), `missing edit sample button for format ${i}`);
+  }
+});
+
+test('サンプル編集ダイアログの要素がある', () => {
+  for (const id of ['sampleDialog', 'sampleTitle', 'sampleUrl', 'sampleSaveButton', 'sampleCancelButton']) {
+    assert.ok(optionsHtml.includes(`id="${id}"`), `missing ${id}`);
   }
 });

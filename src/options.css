@@ -94,7 +94,8 @@ h1 {
 }
 
 .formatField label,
-.formatOptions label {
+.formatOptions label,
+.fieldLabel {
   font-size: 0.85rem;
   color: #57606a;
 }
@@ -118,6 +119,93 @@ h1 {
 
 .htmlOption label {
   cursor: pointer;
+}
+
+.previewField,
+.variableField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.previewLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editSampleButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.previewOutput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(1.5em + 8px);
+  max-height: calc(4.5em + 8px);
+  padding: 3px 6px;
+  overflow-y: auto;
+  border: 1px solid #c9cdd3;
+  border-radius: 4px;
+  font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-break: anywhere;
+  overflow-wrap: anywhere;
+}
+
+.previewOutput.invalidTemplate {
+  color: light-dark(#cf222e, #f85149);
+}
+
+.variableChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.variableChip {
+  padding: 1px 8px;
+  border: 1px solid #c9cdd3;
+  border-radius: 999px;
+  background: Canvas;
+  font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+}
+
+.variableChip:hover:not(:disabled) {
+  background-color: light-dark(#f6f8fa, #21262d);
+}
+
+#sampleDialog {
+  min-width: min(20rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border: 1px solid #c9cdd3;
+  border-radius: 6px;
+}
+
+#sampleDialog .formatField + .formatField {
+  margin-top: 0.6rem;
+}
+
+#sampleDialog menu {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+#sampleDialog::backdrop {
+  background: light-dark(rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.5));
 }
 
 #createSubmenusRow {
@@ -171,6 +259,34 @@ button:disabled {
   }
 }
 
+/* 幅が広い画面では Title・Format の縦並びの右側に Preview を置く。
+   カード内の子要素の並び（ヘッダー, Title, Format, Preview, 変数, オプション）
+   を前提に、Preview を右列の Title・Format 行に跨って配置し、
+   下端が Format テキストエリアに揃うよう引き伸ばす */
+@media (min-width: 40rem) {
+  .formatItem {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 0.6rem 1rem;
+  }
+
+  .formatItemHeader,
+  .variableField,
+  .formatOptions {
+    grid-column: 1 / -1;
+  }
+
+  .formatItem > .previewField {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+  }
+
+  .formatItem > .previewField .previewOutput {
+    flex: 1;
+    max-height: none;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .formatItem {
     border-color: #3d444d;
@@ -186,6 +302,22 @@ button:disabled {
   }
 
   .formatField textarea {
+    border-color: #3d444d;
+  }
+
+  .previewOutput {
+    border-color: #3d444d;
+  }
+
+  .variableChip {
+    border-color: #3d444d;
+  }
+
+  .variableChip:hover:not(:disabled) {
+    background-color: #30363d;
+  }
+
+  #sampleDialog {
     border-color: #3d444d;
   }
 }

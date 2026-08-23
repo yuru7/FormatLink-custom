@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <title>FormatLink settings</title>
   <link rel="stylesheet" href="options.css">
+  <script src="format-template.js"></script>
   <script src="options.js"></script>
 </head>
 
@@ -35,6 +36,28 @@
         <div class="formatField">
           <label for="format1">Format</label>
           <textarea id="format1" rows="1"></textarea>
+        </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="1"
+              aria-label="Edit sample title and URL for format 1"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview1" for="format1" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="1" data-variable="title"
+              aria-label="Insert {{title}} into format 1">{{title}}</button>
+            <button type="button" class="variableChip" data-index="1" data-variable="url"
+              aria-label="Insert {{url}} into format 1">{{url}}</button>
+            <button type="button" class="variableChip" data-index="1" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 1">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="1" data-variable="text"
+              aria-label="Insert {{text}} into format 1">{{text}}</button>
+          </div>
         </div>
         <div class="formatOptions">
           <label for="selectionNewlines1">Selected text line breaks</label>
@@ -71,6 +94,28 @@
           <label for="format2">Format</label>
           <textarea id="format2" rows="1"></textarea>
         </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="2"
+              aria-label="Edit sample title and URL for format 2"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview2" for="format2" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="2" data-variable="title"
+              aria-label="Insert {{title}} into format 2">{{title}}</button>
+            <button type="button" class="variableChip" data-index="2" data-variable="url"
+              aria-label="Insert {{url}} into format 2">{{url}}</button>
+            <button type="button" class="variableChip" data-index="2" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 2">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="2" data-variable="text"
+              aria-label="Insert {{text}} into format 2">{{text}}</button>
+          </div>
+        </div>
         <div class="formatOptions">
           <label for="selectionNewlines2">Selected text line breaks</label>
           <select id="selectionNewlines2" aria-label="Selected text line breaks for format 2">
@@ -105,6 +150,28 @@
         <div class="formatField">
           <label for="format3">Format</label>
           <textarea id="format3" rows="1"></textarea>
+        </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="3"
+              aria-label="Edit sample title and URL for format 3"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview3" for="format3" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="3" data-variable="title"
+              aria-label="Insert {{title}} into format 3">{{title}}</button>
+            <button type="button" class="variableChip" data-index="3" data-variable="url"
+              aria-label="Insert {{url}} into format 3">{{url}}</button>
+            <button type="button" class="variableChip" data-index="3" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 3">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="3" data-variable="text"
+              aria-label="Insert {{text}} into format 3">{{text}}</button>
+          </div>
         </div>
         <div class="formatOptions">
           <label for="selectionNewlines3">Selected text line breaks</label>
@@ -141,6 +208,28 @@
           <label for="format4">Format</label>
           <textarea id="format4" rows="1"></textarea>
         </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="4"
+              aria-label="Edit sample title and URL for format 4"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview4" for="format4" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="4" data-variable="title"
+              aria-label="Insert {{title}} into format 4">{{title}}</button>
+            <button type="button" class="variableChip" data-index="4" data-variable="url"
+              aria-label="Insert {{url}} into format 4">{{url}}</button>
+            <button type="button" class="variableChip" data-index="4" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 4">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="4" data-variable="text"
+              aria-label="Insert {{text}} into format 4">{{text}}</button>
+          </div>
+        </div>
         <div class="formatOptions">
           <label for="selectionNewlines4">Selected text line breaks</label>
           <select id="selectionNewlines4" aria-label="Selected text line breaks for format 4">
@@ -175,6 +264,28 @@
         <div class="formatField">
           <label for="format5">Format</label>
           <textarea id="format5" rows="1"></textarea>
+        </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="5"
+              aria-label="Edit sample title and URL for format 5"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview5" for="format5" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="5" data-variable="title"
+              aria-label="Insert {{title}} into format 5">{{title}}</button>
+            <button type="button" class="variableChip" data-index="5" data-variable="url"
+              aria-label="Insert {{url}} into format 5">{{url}}</button>
+            <button type="button" class="variableChip" data-index="5" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 5">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="5" data-variable="text"
+              aria-label="Insert {{text}} into format 5">{{text}}</button>
+          </div>
         </div>
         <div class="formatOptions">
           <label for="selectionNewlines5">Selected text line breaks</label>
@@ -211,6 +322,28 @@
           <label for="format6">Format</label>
           <textarea id="format6" rows="1"></textarea>
         </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="6"
+              aria-label="Edit sample title and URL for format 6"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview6" for="format6" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="6" data-variable="title"
+              aria-label="Insert {{title}} into format 6">{{title}}</button>
+            <button type="button" class="variableChip" data-index="6" data-variable="url"
+              aria-label="Insert {{url}} into format 6">{{url}}</button>
+            <button type="button" class="variableChip" data-index="6" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 6">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="6" data-variable="text"
+              aria-label="Insert {{text}} into format 6">{{text}}</button>
+          </div>
+        </div>
         <div class="formatOptions">
           <label for="selectionNewlines6">Selected text line breaks</label>
           <select id="selectionNewlines6" aria-label="Selected text line breaks for format 6">
@@ -245,6 +378,28 @@
         <div class="formatField">
           <label for="format7">Format</label>
           <textarea id="format7" rows="1"></textarea>
+        </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="7"
+              aria-label="Edit sample title and URL for format 7"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview7" for="format7" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="7" data-variable="title"
+              aria-label="Insert {{title}} into format 7">{{title}}</button>
+            <button type="button" class="variableChip" data-index="7" data-variable="url"
+              aria-label="Insert {{url}} into format 7">{{url}}</button>
+            <button type="button" class="variableChip" data-index="7" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 7">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="7" data-variable="text"
+              aria-label="Insert {{text}} into format 7">{{text}}</button>
+          </div>
         </div>
         <div class="formatOptions">
           <label for="selectionNewlines7">Selected text line breaks</label>
@@ -281,6 +436,28 @@
           <label for="format8">Format</label>
           <textarea id="format8" rows="1"></textarea>
         </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="8"
+              aria-label="Edit sample title and URL for format 8"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview8" for="format8" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="8" data-variable="title"
+              aria-label="Insert {{title}} into format 8">{{title}}</button>
+            <button type="button" class="variableChip" data-index="8" data-variable="url"
+              aria-label="Insert {{url}} into format 8">{{url}}</button>
+            <button type="button" class="variableChip" data-index="8" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 8">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="8" data-variable="text"
+              aria-label="Insert {{text}} into format 8">{{text}}</button>
+          </div>
+        </div>
         <div class="formatOptions">
           <label for="selectionNewlines8">Selected text line breaks</label>
           <select id="selectionNewlines8" aria-label="Selected text line breaks for format 8">
@@ -316,6 +493,28 @@
           <label for="format9">Format</label>
           <textarea id="format9" rows="1"></textarea>
         </div>
+        <div class="previewField">
+          <div class="previewLabelRow">
+            <span class="fieldLabel">Preview</span>
+            <button type="button" class="editSampleButton" data-index="9"
+              aria-label="Edit sample title and URL for format 9"
+              title="Edit sample">Edit</button>
+          </div>
+          <output class="previewOutput" id="preview9" for="format9" aria-live="polite"></output>
+        </div>
+        <div class="variableField">
+          <span class="fieldLabel">Available variables</span>
+          <div class="variableChips">
+            <button type="button" class="variableChip" data-index="9" data-variable="title"
+              aria-label="Insert {{title}} into format 9">{{title}}</button>
+            <button type="button" class="variableChip" data-index="9" data-variable="url"
+              aria-label="Insert {{url}} into format 9">{{url}}</button>
+            <button type="button" class="variableChip" data-index="9" data-variable="pageUrl"
+              aria-label="Insert {{pageUrl}} into format 9">{{pageUrl}}</button>
+            <button type="button" class="variableChip" data-index="9" data-variable="text"
+              aria-label="Insert {{text}} into format 9">{{text}}</button>
+          </div>
+        </div>
         <div class="formatOptions">
           <label for="selectionNewlines9">Selected text line breaks</label>
           <select id="selectionNewlines9" aria-label="Selected text line breaks for format 9">
@@ -342,6 +541,21 @@
     </div>
 
   </form>
+
+  <dialog id="sampleDialog">
+    <div class="formatField">
+      <label for="sampleTitle">Page Title</label>
+      <input type="text" id="sampleTitle">
+    </div>
+    <div class="formatField">
+      <label for="sampleUrl">URL</label>
+      <input type="text" id="sampleUrl">
+    </div>
+    <menu>
+      <button type="button" id="sampleCancelButton">Cancel</button>
+      <button type="button" id="sampleSaveButton">Save</button>
+    </menu>
+  </dialog>
 </body>
 
 </html>
