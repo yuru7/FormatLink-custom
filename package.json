@@ -6,6 +6,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "manual-test": "node manual-test/server.js"
+    "manual-test": "node manual-test/server.js",
+    "package": "node scripts/package.mjs",
+    "build": "npm test && npm run package"
   }
 }

@@ -178,6 +178,18 @@ If the default ports are already in use, you can change them:
 PORT=18080 FRAME_PORT=18081 npm run manual-test
 ```
 
+## Building a package for the Chrome Web Store
+
+Run `npm run build` to run the tests and create a ZIP package in `dist/`:
+
+```sh
+npm run build
+# dist/format-link-custom-<version>.zip
+```
+
+See [docs/chrome-web-store-release.md](docs/chrome-web-store-release.md) (in Japanese)
+for the full build and publishing procedure.
+
 ## Project structure
 
 ```
@@ -190,6 +202,8 @@ PORT=18080 FRAME_PORT=18081 npm run manual-test
 │   └── icons/
 ├── test/           # Unit tests (node --test)
 ├── manual-test/    # Local test page server for manual testing
+├── scripts/        # Build scripts (ZIP packaging for the Chrome Web Store)
+├── docs/           # Release procedure (see chrome-web-store-release.md)
 ├── package.json
 └── README.md
 ```
