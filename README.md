@@ -1,4 +1,4 @@
-# Format Link for Chrome
+# Format Link Custom
 
 This project is a fork of [hnakamur/FormatLink-Chrome](https://github.com/hnakamur/FormatLink-Chrome). Thanks to the original author, hnakamur.
 
@@ -6,7 +6,7 @@ This project is a fork of [hnakamur/FormatLink-Chrome](https://github.com/hnakam
 To format the link of the active tab instantly to use in Markdown, reST, HTML, Text, Textile or other formats.
 
 ## How to use
-You can use keyboard shortcuts, context menus, or the toolbar button of Format Link extension
+You can use keyboard shortcuts, context menus, or the toolbar button of Format Link Custom
 to copy a link in the specified format. Before doing that, you can optionally select some text 
 which may or may not contain a link.
 
@@ -25,7 +25,7 @@ Open the context menu and select the "as XXX" menu item for the format you want.
 One menu item is created for each format configured on the [options page](#flexible-settings).
 
 ### toolbar button
-When you press the toolbar button of "Format Link", the link is copied in the default format,
+When you press the toolbar button of "Format Link Custom", the link is copied in the default format,
 the popup page becomes open, and the formatted text is shown in the text area.
 
 If you want to copy the link in different format, you can press one of the radio buttons.
@@ -44,7 +44,7 @@ If a selected tab cannot be formatted (e.g. a `chrome://` page), it is skipped w
 warning logged. If the whole selection fails, "Failed to get links" is shown instead.
 
 ## Flexible settings
-You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
+You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link Custom" Extension.
 In format settings, you can use the mini template language.
 
 * {{variable}}
@@ -107,8 +107,8 @@ Here are examples:
 ## Permissions required by this extension
 
 * To use this extension, the following two permissions are required:
-  * "Read and change all your data on all websites"
-    * This permission is needed for this extension to run the ["content script"](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts?hl=en) into the content of pages you visit in order to get the page title, the selected text, the page URL, or the link URL.
+  * "Read and change all your data on the websites you visit"
+    * This permission is needed for this extension to run the ["content script"](https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts?hl=en) into the content of pages you visit in order to read the page title, the selected text, the page URL, or the link URL. The extension does not change page content; Chrome does not offer a read-only version of this permission, so the warning includes "change".
   * "Modify data you copy and paste"
     * This permission is needed to copy a URL and a text to the clipboard.
 

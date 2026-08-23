@@ -1,6 +1,6 @@
 Format Link Custom copies the link of the current tab to the clipboard in the format you choose: Markdown, HTML, reST, Textile, LaTeX, plain text, or your own custom format.
 
-This extension is a fork of "Format Link" by hnakamur, extended with multi-tab copying and other improvements.
+This extension is a fork of "Format Link" by hnakamur (https://github.com/hnakamur/FormatLink-Chrome), extended with multi-tab copying and other improvements.
 
 
 FEATURES
@@ -18,27 +18,26 @@ FEATURES
 
 HOW TO USE
 
-1. Keyboard shortcuts (customizable at chrome://extensions/shortcuts)
-   - Shift+Alt+C: copy in the default format
-   - Shift+Alt+1 / Shift+Alt+2 / Shift+Alt+3: copy in format 1 / 2 / 3
-2. Context menu
-   - Right-click and choose the format you want; a menu item (e.g. "as Markdown") is shown for each configured format.
-3. Toolbar button
+1. Toolbar button
    - Click the toolbar button to copy in the default format and open a popup showing the copied text, so you can switch to another format and copy again if needed.
+2. Context menu
+   - Right-click the extension icon or the page and choose the format you want; a menu item (e.g. "as Markdown") is shown for each configured format.
+3. Keyboard shortcuts (the following can be changed at chrome://extensions/shortcuts)
+   - Copy in the default format
+   - Copy in format 1 / 2 / 3
 
 
 NOTES
 
-- Chrome allows up to 4 keyboard shortcuts per extension, so formats 4 through 9 have no keyboard shortcuts.
 - In multi-tab mode, {{text}} means the tab title and {{url}} means the tab URL; selected text and links on the page are not used. Tabs that cannot be accessed (e.g. chrome:// pages) are skipped.
 - For security reasons, copying may not work on some pages such as the Chrome Web Store.
 
 
 PERMISSIONS
 
-- Read and change all your data on all websites: needed to run a content script on the pages you visit in order to get the page title, URL, selected text, and link URL.
+- Read and change all your data on the websites you visit: needed to run a content script on the pages you visit in order to read the page title, URL, selected text, and link URL. This extension does not change page content (Chrome does not offer a read-only version of this permission, so the warning includes "change").
 - Modify data you copy and paste (clipboardWrite): needed to copy the formatted text to the clipboard.
-- Context menus (contextMenus): needed to add the "Format Link" menu items.
+- Context menus (contextMenus): needed to add the "Format Link Custom" menu items.
 - Storage (storage): needed to save your settings locally.
 
 This extension does not collect or transmit any user data. All settings and copied text stay in your browser.
