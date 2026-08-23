@@ -7,7 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const backgroundSource = fs.readFileSync(
-  path.join(__dirname, '..', 'background.js'),
+  path.join(__dirname, '..', 'src', 'background.js'),
   'utf8'
 );
 

@@ -7,7 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const optionsSource = fs.readFileSync(
-  path.join(__dirname, '..', 'options.js'),
+  path.join(__dirname, '..', 'src', 'options.js'),
   'utf8'
 );
 

@@ -7,7 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const contentSource = fs.readFileSync(
-  path.join(__dirname, '..', 'content.js'),
+  path.join(__dirname, '..', 'src', 'content.js'),
   'utf8'
 );
 

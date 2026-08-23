@@ -6,7 +6,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const optionsHtml = fs.readFileSync(
-  path.join(__dirname, '..', 'options.html'),
+  path.join(__dirname, '..', 'src', 'options.html'),
   'utf8'
 );
 

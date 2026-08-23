@@ -7,7 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const popupSource = fs.readFileSync(
-  path.join(__dirname, '..', 'popup.js'),
+  path.join(__dirname, '..', 'src', 'popup.js'),
   'utf8'
 );
 

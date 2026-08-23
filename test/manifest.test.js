@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const manifest = require('../manifest.json');
+const manifest = require('../src/manifest.json');
 const test = require('node:test');
 
 test('content.jsをすべてのフレームへ注入する', () => {

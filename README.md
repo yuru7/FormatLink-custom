@@ -130,7 +130,7 @@ MIT License.
 
 ### Icon
 
-I synthesized two icons (a pencil and a link) to produce ```icon.png```.
+I synthesized two icons (a pencil and a link) to produce `src/icons/icon.png`.
 
 * A pencil icon from [Onebit free icon set](http://www.icojoy.com/articles/44/) © 2010 [Khodjaev Stanislav](http://www.icojoy.com/), used under a License: These icons are free to use in any kind of commercial or non-commercial project unlimited times.
 * A link icon from [Bremen icon set](http://pc.de/icons/#Bremen) © 2010 [Patricia Clausnitzer](http://pc.de/icons/), used under a [Creative Commons Attribution 3.0 License](hhttp://creativecommons.org/licenses/by/3.0/)
@@ -151,7 +151,7 @@ npm test
 You can start a local test page with no extra dependencies.
 
 1. Enable Developer mode at `chrome://extensions`.
-2. Click "Load unpacked" and select this repository directory.
+2. Click "Load unpacked" and select the `src/` directory of this repository.
 3. Start the test server:
 
    ```sh
@@ -166,4 +166,20 @@ If the default ports are already in use, you can change them:
 
 ```sh
 PORT=18080 FRAME_PORT=18081 npm run manual-test
+```
+
+## Project structure
+
+```
+├── src/            # Extension source (load this directory as an unpacked extension)
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html / popup.js / popup.css
+│   ├── options.html / options.js / options.css
+│   └── icons/
+├── test/           # Unit tests (node --test)
+├── manual-test/    # Local test page server for manual testing
+├── package.json
+└── README.md
 ```
