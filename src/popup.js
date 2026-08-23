@@ -232,6 +232,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
   copyButton.addEventListener('click', copy);
 
+  const openOptionsLink = document.getElementById('openOptionsLink');
+  openOptionsLink.addEventListener('click', event => {
+    event.preventDefault();
+    chrome.runtime.openOptionsPage();
+  });
+
   const textarea = document.getElementById('textToCopy');
   if (textarea) {
     const resize = () => {

@@ -94,6 +94,26 @@ button {
   opacity: 1;
 }
 
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.popup-footer a {
+  color: #0969da;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.popup-footer a:hover {
+  text-decoration: underline;
+}
+
+.popup-footer a:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -144,5 +164,9 @@ button {
 
   #copyResult {
     color: #7ee787;
+  }
+
+  .popup-footer a {
+    color: #58a6ff;
   }
 }

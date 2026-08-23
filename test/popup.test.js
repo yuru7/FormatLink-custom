@@ -67,11 +67,12 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     };
   };
 
-  for (const id of ['textToCopy', 'formatGroup', 'copyButton', 'copyAllTabsButton', 'copyResult']) {
+  for (const id of ['textToCopy', 'formatGroup', 'copyButton', 'copyAllTabsButton', 'copyResult', 'openOptionsLink']) {
     elements.set(id, createElement(id));
   }
 
   let responseIndex = 0;
+  let openOptionsPageCalls = 0;
   const sentMessages = [];
   const context = {
     console: {
@@ -103,6 +104,9 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     chrome: {
       runtime: {
         PlatformOs: 'linux',
+        openOptionsPage() {
+          openOptionsPageCalls += 1;
+        },
         sendMessage(message) {
           if (message.message === 'getOptions') {
             return Promise.resolve({
@@ -147,11 +151,25 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     elements,
     sentMessages,
     timers,
+    get openOptionsPageCalls() {
+      return openOptionsPageCalls;
+    },
     async initialize() {
       await documentListeners.get('DOMContentLoaded')();
     },
   };
 };
+
+test('Optionsリンクで設定ページを開く', async () => {
+  const popup = createPopup([{ result: '[Example](https://example.test)' }]);
+
+  await popup.initialize();
+  await popup.elements.get('openOptionsLink').dispatchEvent('click', {
+    preventDefault() {},
+  });
+
+  assert.equal(popup.openOptionsPageCalls, 1);
+});
 
 test('初期コピー成功時にcopied!を表示する', async () => {
   const popup = createPopup([{ result: '[Example](https://example.test)' }]);
