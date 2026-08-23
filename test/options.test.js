@@ -95,6 +95,8 @@ const createOptionsPage = () => {
   elements.set('sampleUrl', createElement('sampleUrl'));
   elements.set('sampleSaveButton', createElement('sampleSaveButton'));
   elements.set('sampleCancelButton', createElement('sampleCancelButton'));
+  elements.set('helpDialog', createElement('helpDialog'));
+  elements.set('helpCloseButton', createElement('helpCloseButton'));
 
   const document = {
     getElementById(id) {
@@ -522,4 +524,18 @@ test('サンプル編集のinput上でEnterを押すとSaveされる', async () 
   assert.equal(page.elements.get('sampleDialog').open, false);
   await page.elements.get('format1').dispatchEvent('input');
   assert.equal(page.elements.get('preview1').textContent, 'Enter Title');
+});
+
+test('ヘルプリンクでヘルプモーダルが開きCloseで閉じる', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const formatList = page.elements.get('formatList');
+  await formatList.dispatchEvent('click', {
+    target: createElement('help1', { className: 'helpLink' }),
+  });
+  assert.equal(page.elements.get('helpDialog').open, true);
+
+  await page.elements.get('helpCloseButton').click();
+  assert.equal(page.elements.get('helpDialog').open, false);
 });

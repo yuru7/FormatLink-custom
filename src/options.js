@@ -256,8 +256,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     const editButton = event.target.closest('.editSampleButton');
-    if (!editButton) return;
-    openSampleEditor(Number(editButton.dataset.index));
+    if (editButton) {
+      openSampleEditor(Number(editButton.dataset.index));
+      return;
+    }
+    if (event.target.closest('.helpLink')) {
+      document.getElementById('helpDialog').showModal();
+    }
+  });
+  document.getElementById('helpCloseButton').addEventListener('click', () => {
+    document.getElementById('helpDialog').close();
   });
   document.getElementById('sampleCancelButton').addEventListener('click', closeSampleEditor);
   document.getElementById('sampleSaveButton').addEventListener('click', applySampleEdits);

@@ -71,3 +71,14 @@ test('サンプル編集ダイアログの要素がある', () => {
     assert.ok(optionsHtml.includes(`id="${id}"`), `missing ${id}`);
   }
 });
+
+test('各カードのFormatラベル行にヘルプリンクがある', () => {
+  const links = optionsHtml.match(/class="helpLink"/g) ?? [];
+  assert.equal(links.length, 9);
+});
+
+test('ヘルプモーダルの要素がある', () => {
+  for (const id of ['helpDialog', 'helpCloseButton']) {
+    assert.ok(optionsHtml.includes(`id="${id}"`), `missing ${id}`);
+  }
+});
