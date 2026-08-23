@@ -41,3 +41,10 @@ PERMISSIONS
 - Storage (storage): needed to save your settings locally.
 
 This extension does not collect or transmit any user data. All settings and copied text stay in your browser.
+
+
+SOURCE CODE
+
+https://github.com/yuru7/FormatLink-custom
+
+
