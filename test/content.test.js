@@ -6,6 +6,11 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
+const templateSource = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'format-template.js'),
+  'utf8'
+);
+
 const contentSource = fs.readFileSync(
   path.join(__dirname, '..', 'src', 'content.js'),
   'utf8'
@@ -91,7 +96,7 @@ const loadContentScript = ({
 
   vm.createContext(context);
   vm.runInContext(
-    `${contentSource}\n\nglobalThis.__testExports = { formatLinkAsText, copyToTheClipboard };`,
+    `${templateSource}\n${contentSource}\n\nglobalThis.__testExports = { formatLinkAsText, copyToTheClipboard };`,
     context,
     { filename: 'content.js' }
   );

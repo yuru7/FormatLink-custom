@@ -97,96 +97,6 @@ const formatLinkAsText = (
     return '';
   };
 
-  const formatURL = (format, url, pageUrl, title, selectedText) => {
-    let text = '';
-    let i = 0, len = format.length;
-
-    const parseLiteral = str => {
-      if (format.substr(i, str.length) === str) {
-        i += str.length;
-        return str;
-      } else {
-        return null;
-      }
-    };
-
-    const parseString = () => {
-      let str = '';
-      if (parseLiteral('"')) {
-        while (i < len) {
-          if (parseLiteral('\\')) {
-            if (i < len) {
-              str += format.substr(i++, 1);
-            } else {
-              throw new Error('parse error expected "');
-            }
-          } else if (parseLiteral('"')) {
-            return str;
-          } else {
-            if (i < len) {
-              str += format.substr(i++, 1);
-            } else {
-              throw new Error('parse error expected "');
-            }
-          }
-        }
-      } else {
-        return null;
-      }
-    };
-
-    const processVar = value => {
-      let work = value;
-      while (i < len) {
-        if (parseLiteral('.s(')) {
-          let arg1 = parseString();
-          if (arg1 != null && parseLiteral(',')) {
-            let arg2 = parseString();
-            if (arg2 != null && parseLiteral(')')) {
-              let regex = new RegExp(arg1, 'g');
-              work = work.replace(regex, arg2);
-            } else {
-              throw new Error('parse error');
-            }
-          } else {
-            throw new Error('parse error');
-          }
-        } else if (parseLiteral('}}')) {
-          text += work;
-          return;
-        } else {
-          throw new Error('parse error');
-        }
-      }
-    };
-
-    const newline = platformOs === 'win' ? '\r\n' : '\n';
-    while (i < len) {
-      if (parseLiteral('\\')) {
-        if (parseLiteral('n')) {
-          text += newline;
-        } else if (parseLiteral('t')) {
-          text += "\t";
-        } else {
-          text += format.substr(i++, 1);
-        }
-      } else if (parseLiteral('{{')) {
-        if (parseLiteral('title')) {
-          processVar(title);
-        } else if (parseLiteral('url')) {
-          processVar(url);
-        } else if (parseLiteral('pageUrl')) {
-          processVar(pageUrl);
-        } else if (parseLiteral('text')) {
-          processVar(selectedText ? selectedText : title);
-        }
-      } else {
-        text += format.substr(i++, 1);
-      }
-    }
-    return text;
-  }
-
   const title = titleOverride ?? document.title;
   let text;
   let href = linkUrl;
@@ -220,7 +130,13 @@ const formatLinkAsText = (
     href = pageUrl;
   }
 
-  return formatURL(format, href, pageUrl, title, text);
+  return renderFormatTemplate(format, {
+    url: href,
+    pageUrl,
+    title,
+    text,
+    newline: platformOs === 'win' ? '\r\n' : '\n',
+  });
 };
 
 const copyToTheClipboard = (textToCopy, asHTML) => {
