@@ -89,6 +89,7 @@ const createOptionsPage = () => {
   elements.set('createSubmenusCheckbox', createElement('createSubmenusCheckbox'));
   elements.set('saveButton', createElement('saveButton'));
   elements.set('restoreDefaultsButton', createElement('restoreDefaultsButton'));
+  elements.set('cancelButton', createElement('cancelButton'));
   elements.set('formatList', createElement('formatList'));
   elements.set('sampleDialog', createElement('sampleDialog'));
   elements.set('sampleTitle', createElement('sampleTitle'));
@@ -308,6 +309,30 @@ test('Saveボタンは変更があるときだけ有効になる', async () => {
   page.elements.get('title1').value = 'One';
   await page.elements.get('title1').dispatchEvent('input');
   assert.equal(saveButton.disabled, false);
+});
+
+test('Cancelボタンで未保存の変更を破棄して保存済みの値に戻す', async () => {
+  const page = createOptionsPage();
+  await page.initialize();
+
+  const savedCount = page.savedOptions.length;
+
+  page.elements.get('title1').value = 'Changed';
+  page.elements.get('html1').checked = true;
+  await page.elements.get('title1').dispatchEvent('input');
+  assert.equal(page.elements.get('saveButton').disabled, false);
+  assert.equal(page.elements.get('cancelButton').disabled, false);
+
+  await page.elements.get('cancelButton').click();
+
+  assert.equal(page.elements.get('title1').value, 'One');
+  assert.equal(page.elements.get('html1').checked, false);
+  // プレビューも保存済みの内容に戻る
+  assert.equal(page.elements.get('preview1').textContent, 'format one');
+  assert.equal(page.elements.get('saveButton').disabled, true);
+  assert.equal(page.elements.get('cancelButton').disabled, true);
+  // Cancelでは保存されない
+  assert.equal(page.savedOptions.length, savedCount);
 });
 
 test('オプション復元時にFormat欄の高さを内容に合わせてリサイズする', async () => {

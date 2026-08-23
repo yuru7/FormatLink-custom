@@ -120,7 +120,7 @@ const moveOption = (index, direction) => {
   }
   updateMoveButtons();
   updateDefaultFormatControls();
-  updateSaveButton();
+  updateUnsavedChangeButtons();
   updatePreview(index);
   updatePreview(targetIndex);
 };
@@ -134,7 +134,7 @@ const resizeFormatField = textarea => {
 const applyFormatValue = index => {
   updateMoveButtons();
   updateDefaultFormatControls();
-  updateSaveButton();
+  updateUnsavedChangeButtons();
   resizeFormatField(document.getElementById('format' + index));
   updatePreview(index);
 };
@@ -158,12 +158,14 @@ const collectFormValues = () => {
   return values;
 };
 
-const updateSaveButton = () => {
+const updateUnsavedChangeButtons = () => {
   const current = collectFormValues();
   const hasChanges = Object.keys(current).some(key =>
     current[key] !== savedFormValues[key]
   );
+  // 未保存の変更がないときは Save も Cancel も無効（Cancel は未保存の変更を破棄する役割）
   document.getElementById('saveButton').disabled = !hasChanges;
+  document.getElementById('cancelButton').disabled = !hasChanges;
 };
 
 const restoreForm = options => {
@@ -184,7 +186,7 @@ const restoreForm = options => {
     updatePreview(i);
   }
   savedFormValues = collectFormValues();
-  updateSaveButton();
+  updateUnsavedChangeButtons();
 };
 
 const restoreOptions = async () => {
@@ -216,7 +218,7 @@ const saveOptions = async defaultFormatIDToSave => {
   try {
     await chrome.storage.sync.set(options);
     savedFormValues = collectFormValues();
-    updateSaveButton();
+    updateUnsavedChangeButtons();
   } catch (err) {
     console.error("failed to save options", err);
   }
@@ -240,6 +242,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   await restoreOptions();
   document.getElementById('saveButton').addEventListener('click', async e => {
     await saveOptions();
+  });
+  document.getElementById('cancelButton').addEventListener('click', async () => {
+    await restoreOptions();
   });
   document.getElementById('restoreDefaultsButton').addEventListener('click', async e => {
     await restoreDefaults();
@@ -277,27 +282,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('sampleTitle').addEventListener('keydown', handleSampleEnterKey);
   document.getElementById('sampleUrl').addEventListener('keydown', handleSampleEnterKey);
   document.getElementById('createSubmenusCheckbox').addEventListener('change', () => {
-    updateSaveButton();
+    updateUnsavedChangeButtons();
   });
   for (let i = 1; i <= maxCount; ++i) {
     document.getElementById('defaultFormat' + i).addEventListener('change', event => {
       defaultFormatID = Number(event.target.value);
       updateDefaultFormatControls();
-      updateSaveButton();
+      updateUnsavedChangeButtons();
     });
     document.getElementById('title' + i).addEventListener('input', () => {
       updateMoveButtons();
       updateDefaultFormatControls();
-      updateSaveButton();
+      updateUnsavedChangeButtons();
     });
     document.getElementById('format' + i).addEventListener('input', () => {
       applyFormatValue(i);
     });
     document.getElementById('selectionNewlines' + i).addEventListener('change', () => {
-      updateSaveButton();
+      updateUnsavedChangeButtons();
     });
     document.getElementById('html' + i).addEventListener('change', () => {
-      updateSaveButton();
+      updateUnsavedChangeButtons();
     });
   }
 });

@@ -261,12 +261,18 @@ h1 {
   bottom: 0;
   z-index: 1;
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
   padding: 0.75rem 0;
   background: Canvas;
   border-top: 1px solid #c9cdd3;
+}
+
+/* Restore defaults だけ左端に置き、Cancel/Save changes は右端に寄せる */
+#restoreDefaultsButton {
+  margin-right: auto;
 }
 
 #saveButton {
