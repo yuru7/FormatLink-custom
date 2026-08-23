@@ -67,7 +67,7 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     };
   };
 
-  for (const id of ['textToCopy', 'formatGroup', 'saveDefaultFormatButton', 'copyButton', 'copyAllTabsButton', 'copyResult']) {
+  for (const id of ['textToCopy', 'formatGroup', 'copyButton', 'copyAllTabsButton', 'copyResult']) {
     elements.set(id, createElement(id));
   }
 

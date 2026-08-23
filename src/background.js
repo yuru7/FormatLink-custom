@@ -142,14 +142,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     getActiveFrameId(request.tabId).then(frameId => {
       sendResponse({ frameId });
     });
-  } else if (request.message === 'updateDefaultFormat') {
-    chrome.storage.sync.set({ defaultFormat: request.formatID }).then(() => {
-      getOptions().then(options => {
-        createContextMenus(options).then(() => {
-          sendResponse({});
-        })
-      })
-    })
   } else if (request.message === 'createContextMenus') {
     createContextMenus(request.options).then(() => {
       sendResponse({});

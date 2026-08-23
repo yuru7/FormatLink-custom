@@ -18,8 +18,7 @@ body {
 }
 
 .preview,
-.formats,
-.footer {
+.formats {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -64,8 +63,7 @@ button {
 }
 
 #copyButton,
-#copyAllTabsButton,
-#saveDefaultFormatButton {
+#copyAllTabsButton {
   width: 100%;
 }
 
@@ -94,11 +92,6 @@ button {
 
 #copyResult.is-visible {
   opacity: 1;
-}
-
-.footer {
-  padding-top: 8px;
-  border-top: 1px solid #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -151,9 +144,5 @@ button {
 
   #copyResult {
     color: #7ee787;
-  }
-
-  .footer {
-    border-top-color: #57606a;
   }
 }
