@@ -249,13 +249,6 @@ h1 {
   font-size: 0.85em;
 }
 
-#createSubmenusRow {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
-}
-
 #btnGroup {
   position: sticky;
   bottom: 0;

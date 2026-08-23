@@ -1,0 +1,44 @@
+Format Link Custom copies the link of the current tab to the clipboard in the format you choose: Markdown, HTML, reST, Textile, LaTeX, plain text, or your own custom format.
+
+This extension is a fork of "Format Link" by hnakamur, extended with multi-tab copying and other improvements.
+
+
+FEATURES
+
+- Copy a formatted link with a keyboard shortcut, a context menu item, or the toolbar button.
+- Built-in formats: Markdown, reST, HTML, Textile, Text, LaTeX.
+- Custom formats: define up to 9 formats with a mini template language.
+  - Placeholders: {{title}}, {{url}}, {{text}}
+  - String replacement: e.g. {{url.s("\\)","%29")}}
+  - Markdown example: [{{text.s("\\[","\\[").s("\\]","\\]")}}]({{url.s("\\)","%29")}})
+- If text is selected or you right-click a link, that text/link URL is used instead of the page title/URL.
+- Multi-tab copy: select multiple tabs in the tab strip (Ctrl/Cmd-click or Shift-click) and open the popup from the toolbar button. A "Copy all selected tabs (N)" button appears and copies every selected tab at once, one formatted link per line.
+- You can change the default format on the options page.
+
+
+HOW TO USE
+
+1. Keyboard shortcuts (customizable at chrome://extensions/shortcuts)
+   - Shift+Alt+C: copy in the default format
+   - Shift+Alt+1 / Shift+Alt+2 / Shift+Alt+3: copy in format 1 / 2 / 3
+2. Context menu
+   - Right-click and choose the format you want; a menu item (e.g. "as Markdown") is shown for each configured format.
+3. Toolbar button
+   - Click the toolbar button to copy in the default format and open a popup showing the copied text, so you can switch to another format and copy again if needed.
+
+
+NOTES
+
+- Chrome allows up to 4 keyboard shortcuts per extension, so formats 4 through 9 have no keyboard shortcuts.
+- In multi-tab mode, {{text}} means the tab title and {{url}} means the tab URL; selected text and links on the page are not used. Tabs that cannot be accessed (e.g. chrome:// pages) are skipped.
+- For security reasons, copying may not work on some pages such as the Chrome Web Store.
+
+
+PERMISSIONS
+
+- Read and change all your data on all websites: needed to run a content script on the pages you visit in order to get the page title, URL, selected text, and link URL.
+- Modify data you copy and paste (clipboardWrite): needed to copy the formatted text to the clipboard.
+- Context menus (contextMenus): needed to add the "Format Link" menu items.
+- Storage (storage): needed to save your settings locally.
+
+This extension does not collect or transmit any user data. All settings and copied text stay in your browser.

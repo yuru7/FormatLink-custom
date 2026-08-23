@@ -154,7 +154,6 @@ const collectFormValues = () => {
     values['selectionNewlines' + i] = document.getElementById('selectionNewlines' + i).value;
     values['html' + i] = document.getElementById('html' + i).checked;
   }
-  values['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
   return values;
 };
 
@@ -178,7 +177,6 @@ const restoreForm = options => {
       options['selectionNewlines' + i] || 'spaces';
     document.getElementById('html' + i).checked = !!options['html' + i];
   }
-  document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
   updateMoveButtons();
   updateDefaultFormatControls();
   for (let i = 1; i <= maxCount; ++i) {
@@ -211,7 +209,6 @@ const saveOptions = async defaultFormatIDToSave => {
         document.getElementById('selectionNewlines' + i).value;
       options['html' + i] = document.getElementById('html' + i).checked ? 1 : 0;
     }
-    options['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
   } catch (err) {
     console.error("failed to get options", err);
   }
@@ -281,9 +278,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
   document.getElementById('sampleTitle').addEventListener('keydown', handleSampleEnterKey);
   document.getElementById('sampleUrl').addEventListener('keydown', handleSampleEnterKey);
-  document.getElementById('createSubmenusCheckbox').addEventListener('change', () => {
-    updateUnsavedChangeButtons();
-  });
   for (let i = 1; i <= maxCount; ++i) {
     document.getElementById('defaultFormat' + i).addEventListener('change', event => {
       defaultFormatID = Number(event.target.value);

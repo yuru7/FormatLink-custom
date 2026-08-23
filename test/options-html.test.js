@@ -25,7 +25,6 @@ test('Format入力欄は折り返し・スクロール可能なtextareaである
 test('options.htmlに必須の要素IDと属性が存在する', () => {
   assert.ok(optionsHtml.includes('id="formatList"'));
   assert.ok(optionsHtml.includes('name="defaultFormat"'));
-  assert.ok(optionsHtml.includes('id="createSubmenusCheckbox"'));
   assert.ok(optionsHtml.includes('id="saveButton"'));
   assert.ok(optionsHtml.includes('id="restoreDefaultsButton"'));
 

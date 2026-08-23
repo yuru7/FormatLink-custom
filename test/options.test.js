@@ -86,7 +86,6 @@ const createOptionsPage = () => {
       }));
     }
   }
-  elements.set('createSubmenusCheckbox', createElement('createSubmenusCheckbox'));
   elements.set('saveButton', createElement('saveButton'));
   elements.set('restoreDefaultsButton', createElement('restoreDefaultsButton'));
   elements.set('cancelButton', createElement('cancelButton'));
@@ -130,7 +129,6 @@ const createOptionsPage = () => {
     title4: '',
     format4: '',
     html4: 0,
-    createSubmenus: true,
   };
   const savedOptions = [];
   const chrome = {
@@ -291,10 +289,6 @@ test('Saveボタンは変更があるときだけ有効になる', async () => {
 
   page.elements.get('selectionNewlines1').value = 'preserve';
   await page.elements.get('selectionNewlines1').dispatchEvent('change');
-  assert.equal(saveButton.disabled, false);
-
-  page.elements.get('createSubmenusCheckbox').checked = false;
-  await page.elements.get('createSubmenusCheckbox').dispatchEvent('change');
   assert.equal(saveButton.disabled, false);
 
   await saveButton.click();

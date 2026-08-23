@@ -21,11 +21,8 @@ the default format.
 You can change shortcuts at chrome://extensions/shortcuts
 
 ### context menu
-Open the context menu and select the "Format Link as XXX" menu item.
-"XXX" in the menu item label changes as you change the default format on the [options page](#flexible-settings) by selecting the "Default" radio button and saving the options.
-
-If you check the "Create submenus" in the options page and save the options,
-submenus for each format are created under the "Format Link" context menu group.
+Open the context menu and select the "as XXX" menu item for the format you want.
+One menu item is created for each format configured on the [options page](#flexible-settings).
 
 ### toolbar button
 When you press the toolbar button of "Format Link", the link is copied in the default format,

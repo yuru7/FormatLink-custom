@@ -39,8 +39,7 @@ const DEFAULT_OPTIONS = {
   "title9": "",
   "format9": "",
   "html9": 0,
-  "selectionNewlines9": "spaces",
-  "createSubmenus": true
+  "selectionNewlines9": "spaces"
 };
 
 const getFormatCount = options => {
@@ -98,25 +97,16 @@ const sendMessageToFrame = async (tabId, message, frameId) => {
 
 const createContextMenus = async options => {
   await chrome.contextMenus.removeAll();
-  if (options.createSubmenus) {
-    let promises = [];
-    for (let i = 0; i < options.count; i++) {
-      const format = options['title' + (i + 1)];
-      promises[i] = chrome.contextMenus.create({
-        id: "format-link-format" + (i + 1),
-        title: "as " + format,
-        contexts: ["all"]
-      });
-    }
-    await Promise.all(promises);
-  } else {
-    const defaultFormat = options['title' + options['defaultFormat']];
-    await chrome.contextMenus.create({
-      id: "format-link-format-default",
-      title: "Format Link as " + defaultFormat,
+  const promises = [];
+  for (let i = 0; i < options.count; i++) {
+    const format = options['title' + (i + 1)];
+    promises[i] = chrome.contextMenus.create({
+      id: "format-link-format" + (i + 1),
+      title: "as " + format,
       contexts: ["all"]
     });
   }
+  await Promise.all(promises);
 };
 
 // NOTE: We use callback here since the return value of sendMessage called in
