@@ -1,4 +1,4 @@
-Format Link Custom は、現在のタブのリンクをお好みの形式に整形してクリップボードにコピーする拡張機能です。Markdown・HTML・reST・Textile・LaTeX・プレーンテキストのほか、独自にカスタマイズした形式でもコピーできます。
+Format Link Custom は、現在のタブのリンクをお好みの形式に整形してクリップボードにコピーする拡張機能です。Markdown・HTML・プレーンテキストのほか、独自にカスタマイズした形式でもコピーできます。
 
 本拡張機能は hnakamur 氏作「Format Link (https://github.com/hnakamur/FormatLink-Chrome)」のフォークで、複数タブの一括コピーなどの機能を追加しています。
 
@@ -6,7 +6,7 @@ Format Link Custom は、現在のタブのリンクをお好みの形式に整�
 ■ 主な機能
 
 - キーボードショートカット・右クリックメニュー・ツールバーボタンのいずれかで、整形済みリンクをワンアクションでコピー
-- 内蔵形式: Markdown、reST、HTML、Textile、Text、LaTeX
+- 内蔵形式: Markdown、Text、HTML、reST、LaTeX
 - カスタム形式: ミニテンプレート言語で最大 9 形式まで定義可能
   - プレースホルダー: {{title}}、{{url}}、{{text}}
   - 文字列置換: 例 {{url.s("\\)","%29")}}

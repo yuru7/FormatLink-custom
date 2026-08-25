@@ -1,4 +1,4 @@
-Format Link Custom copies the link of the current tab to the clipboard in the format you choose: Markdown, HTML, reST, Textile, LaTeX, plain text, or your own custom format.
+Format Link Custom copies the link of the current tab to the clipboard in the format you choose: Markdown, HTML, plain text, or your own custom format.
 
 This extension is a fork of "Format Link" by hnakamur (https://github.com/hnakamur/FormatLink-Chrome), extended with multi-tab copying and other improvements.
 
@@ -6,7 +6,7 @@ This extension is a fork of "Format Link" by hnakamur (https://github.com/hnakam
 FEATURES
 
 - Copy a formatted link with a keyboard shortcut, a context menu item, or the toolbar button.
-- Built-in formats: Markdown, reST, HTML, Textile, Text, LaTeX.
+- Built-in formats: Markdown, Text, HTML, reST, LaTeX.
 - Custom formats: define up to 9 formats with a mini template language.
   - Placeholders: {{title}}, {{url}}, {{text}}
   - String replacement: e.g. {{url.s("\\)","%29")}}
