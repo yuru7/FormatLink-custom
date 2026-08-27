@@ -1,50 +1,24 @@
-Format Link Custom copies the link of the current tab to the clipboard in the format you choose: Markdown, HTML, plain text, or your own custom format.
+Copy titles and URLs from several selected tabs at once, as Markdown or another style you choose. On a single page, the same action is available from a shortcut, the right-click menu, or the toolbar.
 
-This extension is a fork of "Format Link" by hnakamur (https://github.com/hnakamur/FormatLink-Chrome), extended with multi-tab copying and other improvements.
+WHAT IT DOES
 
-
-FEATURES
-
-- Copy a formatted link with a keyboard shortcut, a context menu item, or the toolbar button.
-- Built-in formats: Markdown, Text, HTML, reST, LaTeX.
-- Custom formats: define up to 9 formats with a mini template language.
-  - Placeholders: {{title}}, {{url}}, {{text}}
-  - String replacement: e.g. {{url.s("\\)","%29")}}
-  - Markdown example: [{{text.s("\\[","\\[").s("\\]","\\]")}}]({{url.s("\\)","%29")}})
-- If text is selected or you right-click a link, that text/link URL is used instead of the page title/URL.
-- Multi-tab copy: select multiple tabs in the tab strip (Ctrl/Cmd-click or Shift-click) and open the popup from the toolbar button. A "Copy all selected tabs (N)" button appears and copies every selected tab at once, one formatted link per line.
-- You can change the default format on the options page.
-
+- Select several tabs in the tab strip and grab them as one list from the popup
+- Built-in: Markdown, plain text, HTML, reST, LaTeX
+- Save up to 9 of your own styles
+- Works with selected text on the page, or when you right-click an anchor
+- Change the default output on the options page
 
 HOW TO USE
 
-1. Toolbar button
-   - Click the toolbar button to copy in the default format and open a popup showing the copied text, so you can switch to another format and copy again if needed.
-2. Context menu
-   - Right-click the extension icon or the page and choose the format you want; a menu item (e.g. "as Markdown") is shown for each configured format.
-3. Keyboard shortcuts (the following can be changed at chrome://extensions/shortcuts)
-   - Copy in the default format
-   - Copy in format 1 / 2 / 3
-
+1. Click the toolbar icon to grab the default output, then review or switch it in the popup
+2. Right-click the extension icon or the page and pick the output you want
+3. Keyboard shortcuts can be changed at chrome://extensions/shortcuts
 
 NOTES
 
-- In multi-tab mode, {{text}} means the tab title and {{url}} means the tab URL; selected text and links on the page are not used. Tabs that cannot be accessed (e.g. chrome:// pages) are skipped.
-- For security reasons, copying may not work on some pages such as the Chrome Web Store.
+- With several tabs selected, each item uses that tab's title and URL. Items that cannot be read (such as chrome:// pages) are skipped
+- Chrome blocks this on the Web Store site itself. Please try it on a normal website
 
+This extension does not collect or send user data. Settings stay in the browser.
 
-PERMISSIONS
-
-- Read and change all your data on the websites you visit: needed to run a content script on the pages you visit in order to read the page title, URL, selected text, and link URL. This extension does not change page content (Chrome does not offer a read-only version of this permission, so the warning includes "change").
-- Modify data you copy and paste (clipboardWrite): needed to copy the formatted text to the clipboard.
-- Context menus (contextMenus): needed to add the "Format Link Custom" menu items.
-- Storage (storage): needed to save your settings locally.
-
-This extension does not collect or transmit any user data. All settings and copied text stay in your browser.
-
-
-SOURCE CODE
-
-https://github.com/yuru7/FormatLink-custom
-
-
+Source: https://github.com/yuru7/FormatLink-custom
