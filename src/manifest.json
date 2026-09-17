@@ -1,6 +1,6 @@
 {
   "name": "Format Link Custom",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
   "description": "Copy titles and URLs in Markdown, HTML, or a custom style. Works on one page or several selected tabs at once.",
   "icons": {
