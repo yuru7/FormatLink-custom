@@ -1,0 +1,162 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.format-link-ui {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font: 0.8125rem/1.4 system-ui, sans-serif;
+}
+
+.format-link-ui .preview,
+.format-link-ui .formats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.format-link-ui .preview-header,
+.format-link-ui .section-label {
+  margin-bottom: -4px;
+}
+
+.format-link-ui .preview-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.format-link-ui .section-label,
+.format-link-ui .preview-header label {
+  font-size: 0.87rem;
+  transform: translateX(-2px);
+}
+
+.format-link-ui textarea {
+  width: 100%;
+  min-height: 4em;
+  max-height: 12em;
+  margin: 0;
+  padding: 6px 8px;
+  overflow-y: auto;
+  resize: none;
+  white-space: pre-wrap;
+  line-break: anywhere;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  font-family: ui-monospace, monospace;
+  font-size: 0.87rem;
+}
+
+.format-link-ui button {
+  padding: 4px 10px;
+}
+
+.format-link-ui #copyButton,
+.format-link-ui #copyAllTabsButton {
+  width: 100%;
+}
+
+.format-link-ui #formatGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.format-link-ui #formatGroup label {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.format-link-ui #copyResult {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  font-size: 0.89375rem;
+  color: #1c9503;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.format-link-ui #copyResult.is-visible {
+  opacity: 1;
+}
+
+.format-link-ui .popup-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.format-link-ui .popup-footer a {
+  color: #0969da;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.format-link-ui .popup-footer a:hover {
+  text-decoration: underline;
+}
+
+.format-link-ui .popup-footer a:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .format-link-ui {
+    color-scheme: dark;
+    background-color: rgb(36, 41, 46);
+    color: #f0f6fc;
+  }
+
+  .format-link-ui textarea {
+    background-color: #0d1117;
+    color: #f0f6fc;
+    border: 1px solid #57606a;
+    border-radius: 4px;
+  }
+
+  .format-link-ui textarea:focus {
+    outline: 2px solid #58a6ff;
+    outline-offset: -1px;
+  }
+
+  .format-link-ui button {
+    background-color: #21262d;
+    color: #f0f6fc;
+    border: 1px solid #8b949e;
+    border-radius: 4px;
+  }
+
+  .format-link-ui button:hover:not(:disabled) {
+    background-color: #30363d;
+  }
+
+  .format-link-ui button:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 1px;
+  }
+
+  .format-link-ui button:disabled {
+    color: #8b949e;
+    border-color: #57606a;
+  }
+
+  .format-link-ui input[type='radio'] {
+    accent-color: #58a6ff;
+  }
+
+  .format-link-ui #copyResult {
+    color: #7ee787;
+  }
+
+  .format-link-ui .popup-footer a {
+    color: #58a6ff;
+  }
+}

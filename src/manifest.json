@@ -18,6 +18,7 @@
       ],
       "js": [
         "format-template.js",
+        "mobile-modal.js",
         "content.js"
       ],
       "all_frames": true,

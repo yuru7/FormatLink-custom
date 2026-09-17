@@ -28,6 +28,8 @@ const loadContentScript = ({
   hoveredText,
   iframes = [],
   sendMessageThrows = false,
+  isTopFrame = true,
+  openFormatLinkModal = async () => true,
 } = {}) => {
   const listeners = new Map();
   const clipboard = {};
@@ -65,17 +67,21 @@ const loadContentScript = ({
     },
   };
 
+  const windowObj = {
+    location: { href: url },
+    getSelection: () => selection,
+  };
+  windowObj.top = isTopFrame ? windowObj : {};
+
   const context = {
     console: {
       log() {},
       error: console.error,
-      warn: console.warn,
+      warn() {},
     },
     document,
-    window: {
-      location: { href: url },
-      getSelection: () => selection,
-    },
+    window: windowObj,
+    openFormatLinkModal,
     chrome: {
       runtime: {
         sendMessage(message) {
@@ -406,4 +412,66 @@ test('formatLink メッセージはタブ自身のタイトルとURLのみでフ
   });
 
   assert.equal(response.text, 'Tab title <https://tab.test/page>');
+});
+
+test('トップフレームではopenFormatLinkModal成功時にopenedを返す', async () => {
+  let openedCalls = 0;
+  const loaded = loadContentScript({
+    openFormatLinkModal: async () => {
+      openedCalls += 1;
+      return true;
+    },
+  });
+
+  const response = await new Promise(resolve => {
+    const result = loaded.listeners.get('message')(
+      { message: 'openFormatLinkModal' },
+      {},
+      resolve
+    );
+    assert.equal(result, true);
+  });
+
+  assert.equal(openedCalls, 1);
+  assert.equal(response.opened, true);
+});
+
+test('iframeではページ内モーダルを開かずopenedをfalseにする', async () => {
+  let openedCalls = 0;
+  const loaded = loadContentScript({
+    isTopFrame: false,
+    openFormatLinkModal: async () => {
+      openedCalls += 1;
+      return true;
+    },
+  });
+
+  const response = await new Promise(resolve => {
+    loaded.listeners.get('message')(
+      { message: 'openFormatLinkModal' },
+      {},
+      resolve
+    );
+  });
+
+  assert.equal(openedCalls, 0);
+  assert.equal(response.opened, false);
+});
+
+test('モーダル生成に失敗したらopenedをfalseにする', async () => {
+  const loaded = loadContentScript({
+    openFormatLinkModal: async () => {
+      throw new Error('attachShadow failed');
+    },
+  });
+
+  const response = await new Promise(resolve => {
+    loaded.listeners.get('message')(
+      { message: 'openFormatLinkModal' },
+      {},
+      resolve
+    );
+  });
+
+  assert.equal(response.opened, false);
 });

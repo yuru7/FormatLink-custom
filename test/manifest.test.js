@@ -24,3 +24,15 @@ test('content.jsより前にテンプレート展開スクリプトを読み込�
     'format-template.js must be injected before content.js'
   );
 });
+
+test('content.jsより前にモバイルモーダルスクリプトを読み込む', () => {
+  const contentScript = manifest.content_scripts.find(script =>
+    script.js.includes('content.js')
+  );
+
+  assert.ok(contentScript.js.includes('mobile-modal.js'));
+  assert.ok(
+    contentScript.js.indexOf('mobile-modal.js') < contentScript.js.indexOf('content.js'),
+    'mobile-modal.js must be injected before content.js'
+  );
+});

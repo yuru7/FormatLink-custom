@@ -161,7 +161,21 @@ const copyToTheClipboard = (textToCopy, asHTML) => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.message === "copyLink") {
+  if (request.message === "openFormatLinkModal") {
+    if (window !== window.top) {
+      sendResponse({ opened: false });
+      return;
+    }
+    Promise.resolve(openFormatLinkModal())
+      .then(opened => {
+        sendResponse({ opened: opened === true });
+      })
+      .catch(error => {
+        console.warn('Failed to open Format Link modal:', error);
+        sendResponse({ opened: false });
+      });
+    return true;
+  } else if (request.message === "copyLink") {
     const textToCopy = formatLinkAsText(
       request.format,
       request.platformOs,

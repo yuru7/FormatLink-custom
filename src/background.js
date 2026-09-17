@@ -109,6 +109,115 @@ const createContextMenus = async options => {
   await Promise.all(promises);
 };
 
+const copyLinkForUi = async (formatID, tab) => {
+  const options = await getOptions();
+  const format = options['format' + formatID];
+  const selectionNewlines = options['selectionNewlines' + formatID];
+  const asHTML = options['html' + formatID];
+
+  const targetTab = tab ?? (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+  if (!targetTab?.id) {
+    return { ok: false, result: 'Failed to get link' };
+  }
+
+  const frameId = await getActiveFrameId(targetTab.id);
+  try {
+    const response = await sendMessageToFrame(targetTab.id, {
+      message: 'copyLink',
+      format,
+      selectionNewlines,
+      asHTML,
+      platformOs: chrome.runtime.PlatformOs,
+      pageUrl: targetTab.url,
+      pageTitle: targetTab.title,
+    }, frameId);
+    if (response?.result !== undefined) {
+      return { ok: true, result: response.result };
+    }
+    return { ok: false, result: 'Failed to get link' };
+  } catch (error) {
+    console.error('Error copying link:', error);
+    return { ok: false, result: 'Failed to get link' };
+  }
+};
+
+const copyModifiedTextForUi = async (modifiedText, formatID, tab) => {
+  const options = await getOptions();
+  const asHTML = options['html' + formatID];
+
+  const targetTab = tab ?? (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+  if (!targetTab?.id) {
+    return { ok: false };
+  }
+
+  const frameId = await getActiveFrameId(targetTab.id);
+  try {
+    const response = await sendMessageToFrame(targetTab.id, {
+      message: 'copyModifiedText',
+      modifiedText,
+      asHTML,
+      platformOs: chrome.runtime.PlatformOs,
+    }, frameId);
+    if (response?.result !== undefined) {
+      return { ok: true, result: response.result };
+    }
+    return { ok: false };
+  } catch (error) {
+    console.error('Error copying modified text:', error);
+    return { ok: false };
+  }
+};
+
+const copyHighlightedTabsForUi = async (formatID, tab) => {
+  const options = await getOptions();
+  const format = options['format' + formatID];
+  const asHTML = options['html' + formatID];
+
+  const query = tab?.windowId === undefined
+    ? { highlighted: true, currentWindow: true }
+    : { highlighted: true, windowId: tab.windowId };
+  const tabs = await chrome.tabs.query(query);
+  if (tabs.length < 2) {
+    return { ok: false };
+  }
+
+  const newline = chrome.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
+  const texts = [];
+  for (const target of tabs) {
+    try {
+      const response = await sendMessageToFrame(target.id, {
+        message: 'formatLink',
+        format,
+        platformOs: chrome.runtime.PlatformOs,
+      }, 0);
+      if (response?.text !== undefined) {
+        texts.push(response.text);
+      }
+    } catch (error) {
+      console.warn('Failed to format the tab:', target.id, error);
+    }
+  }
+  if (texts.length === 0) {
+    return { ok: false, result: 'Failed to get links' };
+  }
+
+  const targetTab = tabs.find(item => item.active) ?? tabs[0];
+  try {
+    const response = await sendMessageToFrame(targetTab.id, {
+      message: 'copyModifiedText',
+      modifiedText: texts.join(newline),
+      asHTML,
+    }, 0);
+    if (response?.result !== undefined) {
+      return { ok: true, result: response.result };
+    }
+    return { ok: false };
+  } catch (error) {
+    console.error('Error copying modified text:', error);
+    return { ok: false };
+  }
+};
+
 // NOTE: We use callback here since the return value of sendMessage called in
 // popup.js becomes undefined if we use async/await.
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -134,6 +243,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
   } else if (request.message === 'createContextMenus') {
     createContextMenus(request.options).then(() => {
+      sendResponse({});
+    });
+  } else if (request.message === 'uiCopyLink') {
+    copyLinkForUi(request.formatID, sender.tab).then(result => {
+      sendResponse(result);
+    });
+  } else if (request.message === 'uiCopyModifiedText') {
+    copyModifiedTextForUi(request.modifiedText, request.formatID, sender.tab).then(result => {
+      sendResponse(result);
+    });
+  } else if (request.message === 'uiCopyHighlightedTabs') {
+    copyHighlightedTabsForUi(request.formatID, sender.tab).then(result => {
+      sendResponse(result);
+    });
+  } else if (request.message === 'uiGetHighlightedTabCount') {
+    const query = sender.tab?.windowId === undefined
+      ? { highlighted: true, currentWindow: true }
+      : { highlighted: true, windowId: sender.tab.windowId };
+    chrome.tabs.query(query).then(tabs => {
+      sendResponse({ count: tabs.length });
+    });
+  } else if (request.message === 'openOptionsPage') {
+    chrome.runtime.openOptionsPage();
+    sendResponse({});
+  } else if (request.message === 'getModalCss') {
+    Promise.all([
+      fetch(chrome.runtime.getURL('ui.css')).then(response => response.text()),
+      fetch(chrome.runtime.getURL('mobile-modal.css')).then(response => response.text()),
+    ]).then(([uiCss, modalCss]) => {
+      sendResponse({ css: `${uiCss}\n${modalCss}` });
+    }).catch(error => {
+      console.warn('Failed to load Format Link modal CSS:', error);
       sendResponse({});
     });
   }

@@ -6,12 +6,25 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
+const platformSource = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'platform.js'),
+  'utf8'
+);
 const popupSource = fs.readFileSync(
   path.join(__dirname, '..', 'src', 'popup.js'),
   'utf8'
 );
+const popupHtml = fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'popup.html'),
+  'utf8'
+);
 
-const createPopup = (responses, { highlightedTabs } = {}) => {
+const DESKTOP_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+const ANDROID_USER_AGENT =
+  'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 Vivaldi/6.5';
+
+const createPopup = (responses, { highlightedTabs, navigator: navigatorOverride } = {}) => {
   const elements = new Map();
   const documentListeners = new Map();
   const timers = [];
@@ -73,11 +86,21 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
 
   let responseIndex = 0;
   let openOptionsPageCalls = 0;
+  let windowClosed = false;
   const sentMessages = [];
   const context = {
     console: {
       error() {},
       warn() {},
+    },
+    navigator: navigatorOverride ?? {
+      userAgent: DESKTOP_USER_AGENT,
+      userAgentData: { mobile: false },
+    },
+    window: {
+      close() {
+        windowClosed = true;
+      },
     },
     document: {
       addEventListener(type, listener) {
@@ -145,7 +168,7 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     },
   };
 
-  vm.runInNewContext(popupSource, context);
+  vm.runInNewContext(`${platformSource}\n${popupSource}`, context);
 
   return {
     elements,
@@ -154,11 +177,25 @@ const createPopup = (responses, { highlightedTabs } = {}) => {
     get openOptionsPageCalls() {
       return openOptionsPageCalls;
     },
+    get windowClosed() {
+      return windowClosed;
+    },
     async initialize() {
       await documentListeners.get('DOMContentLoaded')();
     },
   };
 };
+
+test('popup.htmlは共通UIとモバイル判定スクリプトを読み込む', () => {
+  assert.ok(popupHtml.includes('href="ui.css"'));
+  assert.ok(popupHtml.includes('href="popup.css"'));
+  assert.ok(popupHtml.includes('src="platform.js"'));
+  assert.ok(
+    popupHtml.indexOf('src="platform.js"') < popupHtml.indexOf('src="popup.js"'),
+    'platform.js must be loaded before popup.js'
+  );
+  assert.ok(popupHtml.includes('class="format-link-ui"'));
+});
 
 test('Optionsリンクで設定ページを開く', async () => {
   const popup = createPopup([{ result: '[Example](https://example.test)' }]);
@@ -343,4 +380,64 @@ test('全タブのフォーマットに失敗したらエラーメッセージ�
 
   assert.equal(popup.elements.get('textToCopy').value, 'Failed to get links');
   assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
+});
+
+const mobileNavigator = {
+  userAgent: ANDROID_USER_AGENT,
+  userAgentData: { mobile: true },
+};
+
+test('モバイルではページ内モーダルの表示成功後にpopupを閉じる', async () => {
+  const popup = createPopup([{ opened: true }], {
+    navigator: mobileNavigator,
+  });
+
+  await popup.initialize();
+
+  assert.equal(popup.windowClosed, true);
+  assert.equal(popup.sentMessages.length, 1);
+  assert.equal(popup.sentMessages[0].message.message, 'openFormatLinkModal');
+  assert.equal(popup.sentMessages[0].options.frameId, 0);
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), false);
+});
+
+test('モバイルでモーダル起動に失敗したら従来popupを初期化する', async () => {
+  const popup = createPopup([
+    new Error('Could not establish connection. Receiving end does not exist.'),
+    { result: '[Example](https://example.test)' },
+  ], {
+    navigator: mobileNavigator,
+  });
+
+  await popup.initialize();
+
+  assert.equal(popup.windowClosed, false);
+  assert.equal(popup.sentMessages[0].message.message, 'openFormatLinkModal');
+  assert.equal(popup.sentMessages[1].message.message, 'copyLink');
+  assert.equal(popup.elements.get('textToCopy').value, '[Example](https://example.test)');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
+});
+
+test('モバイルでモーダルがopened以外なら従来popupを初期化する', async () => {
+  const popup = createPopup([
+    { opened: false },
+    { result: '[Example](https://example.test)' },
+  ], {
+    navigator: mobileNavigator,
+  });
+
+  await popup.initialize();
+
+  assert.equal(popup.windowClosed, false);
+  assert.equal(popup.sentMessages[1].message.message, 'copyLink');
+  assert.equal(popup.elements.get('copyResult').classList.contains('is-visible'), true);
+});
+
+test('デスクトップではページ内モーダルを開かず従来popupを使う', async () => {
+  const popup = createPopup([{ result: '[Example](https://example.test)' }]);
+
+  await popup.initialize();
+
+  assert.equal(popup.windowClosed, false);
+  assert.equal(popup.sentMessages[0].message.message, 'copyLink');
 });

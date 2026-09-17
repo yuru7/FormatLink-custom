@@ -190,7 +190,23 @@ const getSelectedFormatID = () => {
   return undefined;
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+const tryOpenInPageModal = async () => {
+  const tabs = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  const tabId = tabs[0]?.id;
+  if (tabId === undefined) {
+    return false;
+  }
+
+  const response = await chrome.tabs.sendMessage(tabId, {
+    message: 'openFormatLinkModal',
+  }, { frameId: 0 });
+  return response?.opened === true;
+};
+
+const initializePopup = async () => {
   const options = await getOptions();
   if (options) {
     populateFormatGroup(options);
@@ -257,4 +273,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     resize();
   }
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (shouldUseInPageUI()) {
+    try {
+      const opened = await tryOpenInPageModal();
+      if (opened) {
+        window.close();
+        return;
+      }
+    } catch (error) {
+      console.warn('Failed to open in-page modal:', error);
+    }
+  }
+
+  await initializePopup();
 });
