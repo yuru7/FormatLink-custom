@@ -181,7 +181,7 @@ test('ページ内モーダルはShadow DOMのダイアログとして開く', a
     ?? host.shadowRoot.children[1];
   assert.equal(modal.attrs.role, 'dialog');
   assert.equal(modal.attrs['aria-modal'], 'true');
-  assert.equal(loaded.elementsById.get('closeButton').textContent, '閉じる');
+  assert.equal(loaded.elementsById.get('closeButton').textContent, 'Close');
   assert.equal(
     loaded.elementsById.get('textToCopy').value,
     '[Example](https://example.test)'
@@ -224,7 +224,7 @@ test('既存モーダルがある場合は二重生成せず内容を更新す�
   );
 });
 
-test('閉じるボタンでhostを削除し背景スクロールを戻す', async () => {
+test('Closeボタンでhostを削除し背景スクロールを戻す', async () => {
   const loaded = loadModal({ runtimeMessages: defaultRuntimeMessages });
   loaded.documentElement.style.overflow = 'auto';
 
@@ -233,6 +233,36 @@ test('閉じるボタンでhostを削除し背景スクロールを戻す', asyn
 
   assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
   assert.equal(loaded.documentElement.style.overflow, 'auto');
+});
+
+test('Copy成功時はモーダルを閉じる', async () => {
+  const loaded = loadModal({
+    runtimeMessages: [
+      ...defaultRuntimeMessages,
+      { ok: true, result: '[Example](https://example.test)' },
+    ],
+  });
+  loaded.documentElement.style.overflow = 'auto';
+
+  await loaded.openFormatLinkModal();
+  await loaded.elementsById.get('copyButton').dispatchEvent('click');
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+  assert.equal(loaded.documentElement.style.overflow, 'auto');
+});
+
+test('Copy失敗時はモーダルを閉じない', async () => {
+  const loaded = loadModal({
+    runtimeMessages: [
+      ...defaultRuntimeMessages,
+      new Error('copy failed'),
+    ],
+  });
+
+  await loaded.openFormatLinkModal();
+  await loaded.elementsById.get('copyButton').dispatchEvent('click');
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), true);
 });
 
 test('初期表示ではtextareaを自動フォーカスしない', async () => {

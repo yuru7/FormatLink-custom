@@ -76,7 +76,7 @@ const buildModalDom = shadowRoot => {
     type: 'button',
     className: 'close-button',
     id: 'closeButton',
-    textContent: '閉じる',
+    textContent: 'Close',
   });
   header.appendChild(closeButton);
 
@@ -135,7 +135,7 @@ const lockBackgroundScroll = () => {
   };
 };
 
-const createModalUi = (root, { autoFocus = false } = {}) => {
+const createModalUi = (root, { autoFocus = false, onCopySuccess } = {}) => {
   const getElement = id => root.getElementById(id);
 
   const hideCopiedResult = () => {
@@ -248,12 +248,6 @@ const createModalUi = (root, { autoFocus = false } = {}) => {
     }
   };
 
-  const resizeTextarea = () => {
-    const textarea = getElement('textToCopy');
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-  };
-
   const refresh = async () => {
     const options = await getOptions();
     if (!options) {
@@ -264,7 +258,6 @@ const createModalUi = (root, { autoFocus = false } = {}) => {
     if (result) {
       showCopiedResult();
     }
-    resizeTextarea();
   };
 
   const copyAllTabsButton = getElement('copyAllTabsButton');
@@ -283,7 +276,7 @@ const createModalUi = (root, { autoFocus = false } = {}) => {
     if (formatID) {
       const result = await copyModifiedText(getElement('textToCopy').value, formatID);
       if (result) {
-        showCopiedResult();
+        onCopySuccess?.();
       }
     }
   };
@@ -295,10 +288,7 @@ const createModalUi = (root, { autoFocus = false } = {}) => {
   });
 
   const textarea = getElement('textToCopy');
-  textarea.addEventListener('input', () => {
-    hideCopiedResult();
-    resizeTextarea();
-  });
+  textarea.addEventListener('input', hideCopiedResult);
   textarea.addEventListener('keydown', event => {
     if (event.isComposing || !event.ctrlKey || event.key !== 'Enter') {
       return;
@@ -356,7 +346,10 @@ const openFormatLinkModal = async () => {
 
   shadowRoot.getElementById('closeButton').addEventListener('click', close);
 
-  const ui = createModalUi(shadowRoot, { autoFocus: false });
+  const ui = createModalUi(shadowRoot, {
+    autoFocus: false,
+    onCopySuccess: close,
+  });
   modalControllers.set(host, {
     refresh: ui.refresh,
     close,
