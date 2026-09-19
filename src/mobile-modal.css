@@ -22,7 +22,7 @@ select {
 }
 
 .modal.format-link-ui {
-  font-size: 1.2em;
+  font-size: 1em;
   line-height: 1.4;
   font-family: inherit;
 }
@@ -36,7 +36,7 @@ select {
   overflow: auto;
   background-color: #fff;
   color: #1f2328;
-  font-size: 1.2em;
+  font-size: 1em;
   padding:
     max(12px, env(safe-area-inset-top, 0px))
     max(16px, env(safe-area-inset-right, 0px))
