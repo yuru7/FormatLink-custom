@@ -245,7 +245,18 @@ test('ページ内モーダルはShadow DOMのダイアログとして開く', a
     ?? host.shadowRoot.children[1];
   assert.equal(modal.attrs.role, 'dialog');
   assert.equal(modal.attrs['aria-modal'], 'true');
-  assert.equal(loaded.elementsById.get('closeButton').textContent, 'Close');
+  const previewHeader = loaded.createdElements.find(
+    element => element.className === 'preview-header'
+  );
+  const closeButton = loaded.elementsById.get('closeButton');
+  assert.equal(closeButton.textContent, '×');
+  assert.equal(closeButton.attrs['aria-label'], 'Close');
+  assert.equal(previewHeader.children[1], loaded.elementsById.get('copyResult'));
+  assert.equal(previewHeader.children[2], closeButton);
+  assert.equal(
+    loaded.createdElements.some(element => element.className === 'modal-header'),
+    false
+  );
   assert.equal(
     loaded.elementsById.get('textToCopy').value,
     '[Example](https://example.test)'
@@ -471,6 +482,15 @@ test('mobile-modal.cssは16px基準でremを使わない', () => {
   assert.match(css, /box-sizing:\s*border-box/);
   assert.match(css, /button,\s*input,\s*textarea,\s*select\s*\{[\s\S]*?font:\s*inherit/);
   assert.doesNotMatch(css, /[\d.]rem\b/);
+});
+
+test('preview-headerはCopiedを中央、閉じるボタンを右端の丸い×にする', () => {
+  const css = readModalCss();
+
+  assert.match(css, /\.modal \.preview-header\s*\{[\s\S]*?grid-template-columns:\s*1fr auto 1fr/);
+  assert.match(css, /\.modal #copyResult\s*\{[\s\S]*?justify-self:\s*center/);
+  assert.match(css, /\.modal \.close-button\s*\{[\s\S]*?justify-self:\s*end/);
+  assert.match(css, /\.modal \.close-button\s*\{[\s\S]*?border-radius:\s*50%/);
 });
 
 test('Shadow DOMへ注入するCSSのremは16px基準のpxへ置き換える', async () => {

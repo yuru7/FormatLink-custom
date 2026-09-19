@@ -44,17 +44,33 @@ select {
     max(16px, env(safe-area-inset-left, 0px));
 }
 
-.modal-header {
-  display: flex;
-  justify-content: flex-start;
+.modal .preview-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
+.modal .preview-header label {
+  justify-self: start;
+}
+
+.modal #copyResult {
+  justify-self: center;
+}
+
 .modal .close-button {
-  min-height: 40px;
-  min-width: 44px;
-  padding: 8px 14px;
-  font-size: 1em;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.25em;
+  line-height: 1;
   touch-action: manipulation;
 }
 

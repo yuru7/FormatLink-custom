@@ -107,15 +107,6 @@ const buildModalDom = shadowRoot => {
     'aria-label': 'Format Link',
   });
 
-  const header = createElement('header', { className: 'modal-header' });
-  const closeButton = createElement('button', {
-    type: 'button',
-    className: 'close-button',
-    id: 'closeButton',
-    textContent: 'Close',
-  });
-  header.appendChild(closeButton);
-
   const preview = createElement('div', { className: 'preview' });
   const previewHeader = createElement('div', { className: 'preview-header' });
   previewHeader.appendChild(createElement('label', {
@@ -125,6 +116,13 @@ const buildModalDom = shadowRoot => {
   previewHeader.appendChild(createElement('span', {
     id: 'copyResult',
     textContent: '✔ Copied',
+  }));
+  previewHeader.appendChild(createElement('button', {
+    type: 'button',
+    className: 'close-button',
+    id: 'closeButton',
+    'aria-label': 'Close',
+    textContent: '×',
   }));
   preview.appendChild(previewHeader);
   preview.appendChild(createElement('textarea', { id: 'textToCopy' }));
@@ -154,7 +152,6 @@ const buildModalDom = shadowRoot => {
     textContent: 'Options',
   }));
 
-  modal.appendChild(header);
   modal.appendChild(preview);
   modal.appendChild(formats);
   modal.appendChild(footer);
