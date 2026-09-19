@@ -86,7 +86,11 @@ const createFakeElement = (tagName, elementsById) => {
   return element;
 };
 
-const loadModal = ({ runtimeMessages } = {}) => {
+const loadModal = ({
+  runtimeMessages,
+  modalCss = '.modal { color: black; }',
+  modalCssError,
+} = {}) => {
   const elementsById = new Map();
   const documentElement = createFakeElement('html', elementsById);
   const createdElements = [];
@@ -123,7 +127,10 @@ const loadModal = ({ runtimeMessages } = {}) => {
         sendMessage(message) {
           runtimeSent.push(message);
           if (message.message === 'getModalCss') {
-            return Promise.resolve({ css: '.modal { color: black; }' });
+            if (modalCssError) {
+              return Promise.reject(modalCssError);
+            }
+            return Promise.resolve({ css: modalCss });
           }
           const response = runtimeMessages?.[messageIndex++];
           if (response instanceof Error) {
@@ -174,6 +181,7 @@ test('ページ内モーダルはShadow DOMのダイアログとして開く', a
   assert.ok(host);
   assert.equal(host.removed, undefined);
   assert.match(host.style.cssText, /z-index: 2147483647/);
+  assert.match(host.style.cssText, /font-size: 16px/);
   assert.equal(loaded.documentElement.style.overflow, 'hidden');
   assert.equal(loaded.documentElement.children.includes(host), true);
 
@@ -283,3 +291,56 @@ test('初期表示ではtextareaを自動フォーカスしない', async () => 
 
   assert.deepEqual(focusCalls, []);
 });
+
+const readModalCss = () => fs.readFileSync(
+  path.join(__dirname, '..', 'src', 'mobile-modal.css'),
+  'utf8'
+);
+
+const getShadowStyle = loaded => {
+  const host = loaded.elementsById.get('format-link-custom-modal-host');
+  return host.shadowRoot.children.find(child => child.tagName === 'style');
+};
+
+test('mobile-modal.cssは16px基準でremを使わない', () => {
+  const css = readModalCss();
+
+  assert.match(css, /:host\s*\{[\s\S]*?font-size:\s*16px/);
+  assert.match(css, /box-sizing:\s*border-box/);
+  assert.match(css, /button,\s*input,\s*textarea,\s*select\s*\{[\s\S]*?font:\s*inherit/);
+  assert.doesNotMatch(css, /[\d.]rem\b/);
+});
+
+test('Shadow DOMへ注入するCSSのremは16px基準のpxへ置き換える', async () => {
+  const loaded = loadModal({
+    runtimeMessages: defaultRuntimeMessages,
+    modalCss: [
+      ':host { font-size: 16px; }',
+      '.format-link-ui { font-size: 0.8125rem; }',
+      '.modal { padding: 1rem; font-size: 1.2em; }',
+    ].join('\n'),
+  });
+
+  await loaded.openFormatLinkModal();
+  const css = getShadowStyle(loaded).textContent;
+
+  assert.match(css, /font-size: 13px/);
+  assert.match(css, /padding: 16px/);
+  assert.match(css, /font-size: 1.2em/);
+  assert.doesNotMatch(css, /[\d.]rem\b/);
+});
+
+test('CSS読み込み失敗時は16px基準のフォールバックを使う', async () => {
+  const loaded = loadModal({
+    runtimeMessages: defaultRuntimeMessages,
+    modalCssError: new Error('css failed'),
+  });
+
+  await loaded.openFormatLinkModal();
+  const css = getShadowStyle(loaded).textContent;
+
+  assert.match(css, /:host\s*\{[\s\S]*?font-size:\s*16px/);
+  assert.match(css, /font:\s*inherit/);
+  assert.doesNotMatch(css, /[\d.]rem\b/);
+});
+

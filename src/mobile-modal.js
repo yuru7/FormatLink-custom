@@ -3,7 +3,28 @@
 const FORMAT_LINK_MODAL_HOST_ID = 'format-link-custom-modal-host';
 const modalControllers = new WeakMap();
 
+const cssWithoutRem = css => css.replace(
+  /(-?[\d.]+)rem\b/g,
+  (_, value) => `${Number.parseFloat(value) * 16}px`
+);
+
 const FALLBACK_MODAL_CSS = `
+:host {
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.4;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
 .modal {
   position: fixed;
   inset: 0;
@@ -11,7 +32,9 @@ const FALLBACK_MODAL_CSS = `
   background: #fff;
   color: #1f2328;
   padding: 16px;
-  font: 1rem/1.4 system-ui, sans-serif;
+  font-size: 1em;
+  line-height: 1.4;
+  font-family: inherit;
 }
 `;
 
@@ -19,7 +42,7 @@ const loadModalCss = async () => {
   try {
     const response = await chrome.runtime.sendMessage({ message: 'getModalCss' });
     if (response?.css) {
-      return response.css;
+      return cssWithoutRem(response.css);
     }
     throw new Error('Empty modal CSS');
   } catch (error) {
@@ -44,6 +67,9 @@ const applyHostStyles = host => {
     'background: transparent !important',
     'z-index: 2147483647 !important',
     'pointer-events: auto !important',
+    'font-size: 16px !important',
+    'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important',
+    'line-height: 1.4 !important',
   ].join('; ');
 };
 
