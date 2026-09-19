@@ -3,6 +3,16 @@
 const FORMAT_LINK_MODAL_HOST_ID = 'format-link-custom-modal-host';
 const modalControllers = new WeakMap();
 
+const attachModalCloseWatcher = onClose => {
+  const CloseWatcherCtor = globalThis.CloseWatcher;
+  if (typeof CloseWatcherCtor !== 'function') {
+    return undefined;
+  }
+  const watcher = new CloseWatcherCtor();
+  watcher.addEventListener('close', onClose);
+  return watcher;
+};
+
 const cssWithoutRem = css => css.replace(
   /(-?[\d.]+)rem\b/g,
   (_, value) => `${Number.parseFloat(value) * 16}px`
@@ -364,11 +374,30 @@ const openFormatLinkModal = async () => {
   buildModalDom(shadowRoot);
 
   const restoreScroll = lockBackgroundScroll();
+  let modalOpen = true;
+  let closeWatcher;
+  const onKeyDown = event => {
+    if (event.isComposing || event.key !== 'Escape') {
+      return;
+    }
+    close();
+  };
   const close = () => {
+    if (!modalOpen) {
+      return;
+    }
+    modalOpen = false;
+    closeWatcher?.destroy();
+    closeWatcher = undefined;
+    window.removeEventListener('keydown', onKeyDown);
     restoreScroll();
     host.remove();
     modalControllers.delete(host);
   };
+  closeWatcher = attachModalCloseWatcher(close);
+  if (!closeWatcher) {
+    window.addEventListener('keydown', onKeyDown);
+  }
 
   shadowRoot.getElementById('closeButton').addEventListener('click', close);
 

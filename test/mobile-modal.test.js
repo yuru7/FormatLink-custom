@@ -86,15 +86,47 @@ const createFakeElement = (tagName, elementsById) => {
   return element;
 };
 
+const createFakeCloseWatcher = instances => {
+  return class FakeCloseWatcher {
+    constructor() {
+      this.destroyed = false;
+      this.listeners = new Set();
+      instances.push(this);
+    }
+
+    addEventListener(type, listener) {
+      if (type === 'close') {
+        this.listeners.add(listener);
+      }
+    }
+
+    destroy() {
+      this.destroyed = true;
+    }
+
+    dispatchClose() {
+      if (this.destroyed) {
+        return;
+      }
+      for (const listener of [...this.listeners]) {
+        listener();
+      }
+      this.destroyed = true;
+    }
+  };
+};
+
 const loadModal = ({
   runtimeMessages,
   modalCss = '.modal { color: black; }',
   modalCssError,
+  closeWatcher = true,
 } = {}) => {
   const elementsById = new Map();
   const documentElement = createFakeElement('html', elementsById);
   const createdElements = [];
   const runtimeSent = [];
+  const closeWatchers = [];
   let messageIndex = 0;
 
   const document = {
@@ -116,12 +148,30 @@ const loadModal = ({
     return child;
   };
 
+  const windowListeners = {
+    keydown: new Set(),
+  };
+  const dispatchWindowEvent = (type, event) => {
+    for (const listener of [...windowListeners[type] ?? []]) {
+      listener(event);
+    }
+  };
+  const window = {
+    addEventListener(type, listener) {
+      windowListeners[type]?.add(listener);
+    },
+    removeEventListener(type, listener) {
+      windowListeners[type]?.delete(listener);
+    },
+  };
+
   const context = {
     console: {
       error() {},
       warn() {},
     },
     document,
+    window,
     chrome: {
       runtime: {
         sendMessage(message) {
@@ -141,6 +191,9 @@ const loadModal = ({
       },
     },
   };
+  if (closeWatcher) {
+    context.CloseWatcher = createFakeCloseWatcher(closeWatchers);
+  }
 
   vm.createContext(context);
   vm.runInContext(
@@ -154,6 +207,9 @@ const loadModal = ({
     elementsById,
     runtimeSent,
     createdElements,
+    closeWatchers,
+    windowListeners,
+    dispatchWindowEvent,
     openFormatLinkModal: context.openFormatLinkModal,
   };
 };
@@ -271,6 +327,112 @@ test('Copy失敗時はモーダルを閉じない', async () => {
   await loaded.elementsById.get('copyButton').dispatchEvent('click');
 
   assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), true);
+});
+
+test('モーダルを開くとCloseWatcherを1つ作りEscape用keydownは付けない', async () => {
+  const loaded = loadModal({ runtimeMessages: defaultRuntimeMessages });
+
+  await loaded.openFormatLinkModal();
+
+  assert.equal(loaded.closeWatchers.length, 1);
+  assert.equal(loaded.closeWatchers[0].destroyed, false);
+  assert.equal(loaded.windowListeners.keydown.size, 0);
+});
+
+test('既存モーダルの再表示ではCloseWatcherを追加しない', async () => {
+  const loaded = loadModal({
+    runtimeMessages: [
+      ...defaultRuntimeMessages,
+      {
+        options: {
+          defaultFormat: 1,
+          count: 1,
+          title1: 'Markdown',
+        },
+      },
+      { ok: true, result: '[Updated](https://example.test)' },
+    ],
+  });
+
+  await loaded.openFormatLinkModal();
+  await loaded.openFormatLinkModal();
+
+  assert.equal(loaded.closeWatchers.length, 1);
+  assert.equal(loaded.closeWatchers[0].destroyed, false);
+});
+
+test('CloseボタンはCloseWatcherを破棄して二重に閉じない', async () => {
+  const loaded = loadModal({ runtimeMessages: defaultRuntimeMessages });
+  loaded.documentElement.style.overflow = 'auto';
+
+  await loaded.openFormatLinkModal();
+  const watcher = loaded.closeWatchers[0];
+  await loaded.elementsById.get('closeButton').dispatchEvent('click');
+  watcher.dispatchClose();
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+  assert.equal(loaded.documentElement.style.overflow, 'auto');
+  assert.equal(watcher.destroyed, true);
+});
+
+test('戻る操作相当のCloseWatcher closeでモーダルを閉じる', async () => {
+  const loaded = loadModal({ runtimeMessages: defaultRuntimeMessages });
+  loaded.documentElement.style.overflow = 'auto';
+
+  await loaded.openFormatLinkModal();
+  loaded.closeWatchers[0].dispatchClose();
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+  assert.equal(loaded.documentElement.style.overflow, 'auto');
+  assert.equal(loaded.closeWatchers[0].destroyed, true);
+});
+
+test('モーダルが閉じた後のCloseWatcher closeでは何もしない', async () => {
+  const loaded = loadModal({ runtimeMessages: defaultRuntimeMessages });
+
+  await loaded.openFormatLinkModal();
+  const watcher = loaded.closeWatchers[0];
+  await loaded.elementsById.get('closeButton').dispatchEvent('click');
+  watcher.dispatchClose();
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+});
+
+test('Copy成功時もCloseWatcherを破棄する', async () => {
+  const loaded = loadModal({
+    runtimeMessages: [
+      ...defaultRuntimeMessages,
+      { ok: true, result: '[Example](https://example.test)' },
+    ],
+  });
+
+  await loaded.openFormatLinkModal();
+  await loaded.elementsById.get('copyButton').dispatchEvent('click');
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+  assert.equal(loaded.closeWatchers[0].destroyed, true);
+});
+
+test('CloseWatcherがない環境ではEscapeキーで閉じる', async () => {
+  const loaded = loadModal({
+    runtimeMessages: defaultRuntimeMessages,
+    closeWatcher: false,
+  });
+  loaded.documentElement.style.overflow = 'auto';
+
+  await loaded.openFormatLinkModal();
+  assert.equal(loaded.closeWatchers.length, 0);
+  assert.equal(loaded.windowListeners.keydown.size, 1);
+
+  loaded.dispatchWindowEvent('keydown', {
+    key: 'Escape',
+    isComposing: false,
+    preventDefault() {},
+  });
+
+  assert.equal(loaded.elementsById.has('format-link-custom-modal-host'), false);
+  assert.equal(loaded.documentElement.style.overflow, 'auto');
+  assert.equal(loaded.windowListeners.keydown.size, 0);
 });
 
 test('初期表示ではtextareaを自動フォーカスしない', async () => {
